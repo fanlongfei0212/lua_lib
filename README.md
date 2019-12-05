@@ -9,10 +9,10 @@
 Table of Contents
 =================
 
-* [Components](#组件)
+* [Components](#Components)
     * [lua-redis-parser](#lua-redis-parser)
     * [redis2-nginx-module](#redis2-nginx-module)
-* [lualib](#类库)
+* [lualib](#lualib)
     * [dkjson](#dkjson)
     * [rsa](#rsa)
     * [common_uitl](#common_util)
@@ -21,10 +21,9 @@ Table of Contents
 Components
 ==========
 
-常用组件
+在OpenResty中经常用到的组件:针对redis操作、对redis原生命令的解析以及转换等等
 
-lua-redis-parser
-----------------
+## lua-redis-parser
 
 1. [官方文献](https://github.com/openresty/lua-redis-parser#parse_reply) 
 
@@ -47,7 +46,7 @@ redis2-nginx-module
 lualib
 ======
 
-常用类库
+在OpenResty中常用的lua类库:针对lua和json之间的序列化以及反序列化类库、rsa加密类库、获取get请求以及post中的参数、字符串的分割返回table、数组去重等等
 
 dkjson
 ------
