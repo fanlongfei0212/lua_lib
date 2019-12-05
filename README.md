@@ -26,21 +26,18 @@ Components
 lua-redis-parser
 ----------------
 
-1. [官方文献](https://github.com/openresty/lua-redis-parser#parse_reply) 
+**[官方文献](https://github.com/openresty/lua-redis-parser#parse_reply)**
 
-2. 主要作用
-    * 将lua中的table格式的redis命令转化成redis的原生命令
-    * 将redis返回的原生命令解析为lua中table
-    * 以及其他，详细信息可查阅官方文献
+主要作用:将lua中的table格式的redis命令转化成redis的原生命令,将redis返回的原生命令解析为lua中table,以及其他，详细信息可查阅官方文献
+
+[Back to TOC](#table-of-contents)
 
 redis2-nginx-module
 -------------------
 
-1. [官方文献](https://github.com/openresty/redis2-nginx-module) 
+**[官方文献](https://github.com/openresty/redis2-nginx-module)**
 
-2. 主要作用
-    * 支持在OpenResty中lua对redis的各种操作
-    * 详细信息可查阅官方文献
+主要作用:支持在OpenResty中lua对redis的各种操作,详细信息可查阅官方文献
 
 [Back to TOC](#table-of-contents)
 
@@ -52,41 +49,37 @@ lualib
 dkjson
 ------
 
-1. [官方文献](http://dkolf.de/src/dkjson-lua.fsl/home) 
+**[官方文献](http://dkolf.de/src/dkjson-lua.fsl/home)** 
 
-2. 主要作用
-    * 可以将lua的table转换为json格式(encode函数)
-    * 可以将json格式的数据解析为lua中的table格式(decode函数)
-    * 详细信息可查阅官方文献
+主要作用:可以将lua的table转换为json格式(encode函数),可以将json格式的数据解析为lua中的table格式(decode函数),详细信息可查阅官方文献
 
 [Back to TOC](#table-of-contents)
 
 rsa
 ---
 
-1. [官方文献](https://github.com/spacewander/lua-resty-rsa) 
+**[官方文献](https://github.com/spacewander/lua-resty-rsa)**
 
-2. 主要作用
-    * 生成rea公钥、私钥对
-    * 用于对数据的rsa加密以及解密
-    * 详细信息可查阅官方文献
+主要作用:生成rea公钥、私钥对,用于对数据的rsa加密以及解密,详细信息可查阅官方文献
 
 [Back to TOC](#table-of-contents)
 
 common_util
 -----------
 
-1. lua实现的一些常用工具类
+lua实现的一些常用工具类
 
-2. demo
+```lua
+```
 
 [Back to TOC](#table-of-contents)
 
 request_args
 ------------
 
-1. lua实现获取请求中的参数
+lua实现获取请求中的参数
 
-2. demo
+```lua
+```
 
 [Back to TOC](#table-of-contents)
