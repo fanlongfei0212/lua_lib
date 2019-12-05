@@ -6,7 +6,8 @@
 
 * **类库使用的demo以及官方文献的资源链接**
 
-## Table of Contents
+Table of Contents
+=================
 
 * [Components](#组件)
     * [lua-redis-parser](#lua-redis-parser)
@@ -17,13 +18,13 @@
     * [common_uitl](#common_util)
     * [request_args](#request_args)
 
-### 组件
+Components
+==========
 
----
+常用组件
 
-#### lua-redis-parser
-
----
+lua-redis-parser
+----------------
 
 1. [官方文献](https://github.com/openresty/lua-redis-parser#parse_reply) 
 
@@ -32,9 +33,8 @@
     * 将redis返回的原生命令解析为lua中table
     * 以及其他，详细信息可查阅官方文献
 
-#### redis2-nginx-module
-
----
+redis2-nginx-module
+-------------------
 
 1. [官方文献](https://github.com/openresty/redis2-nginx-module) 
 
@@ -44,13 +44,13 @@
 
 [Back to TOC](#table-of-contents)
 
-### 类库
+lualib
+======
 
----
+常用类库
 
-#### dkjson
-
----
+dkjson
+------
 
 1. [官方文献](http://dkolf.de/src/dkjson-lua.fsl/home) 
 
@@ -61,8 +61,7 @@
 
 [Back to TOC](#table-of-contents)
 
-#### rsa
-
+rsa
 ---
 
 1. [官方文献](https://github.com/spacewander/lua-resty-rsa) 
@@ -74,9 +73,8 @@
 
 [Back to TOC](#table-of-contents)
 
-#### common_util
-
----
+common_util
+-----------
 
 1. lua实现的一些常用工具类
 
@@ -84,9 +82,8 @@
 
 [Back to TOC](#table-of-contents)
 
-#### request_args
-
----
+request_args
+------------
 
 1. lua实现获取请求中的参数
 
