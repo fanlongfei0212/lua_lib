@@ -23,7 +23,8 @@ Components
 
 在OpenResty中经常用到的组件:针对redis操作、对redis原生命令的解析以及转换等等
 
-## lua-redis-parser
+lua-redis-parser
+----------------
 
 1. [官方文献](https://github.com/openresty/lua-redis-parser#parse_reply) 
 
