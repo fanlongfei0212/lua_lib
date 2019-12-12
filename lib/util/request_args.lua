@@ -1,6 +1,6 @@
 local request_args = {}
 
---获取请求中指定参数的值
+--获取请求url参数
 --入参:参数名称table
 --返回:返回参数名称已经对应的值table
 function request_args.get_args_by_name(arg_names)
@@ -25,7 +25,7 @@ function request_args.get_args_by_name(arg_names)
     return result
 end
 
---获取post请求参数
+--获取请求body体参数（form表单格式）
 --入参:参数名称table
 --返回:返回参数名称已经对应的值table
 function request_args.post_args_by_name(arg_names)

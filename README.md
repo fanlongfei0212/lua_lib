@@ -150,9 +150,43 @@ end
 request_args
 ------------
 
-lua实现获取请求中的参数
+**获取请求中url参数值**
+
+假设请求url:http://localhost:8888/request/args/demo?parameter1=参数1的值&parameter2=参数2的值
 
 ```lua
+local request_args = require "request_args"
+
+local args_names = {"parameter1", "parameter2"}
+local args_values = request_args.get_args_by_name(args_names)
+
+for k, v in pairs(args_values) do
+    ngx.say("get请求中参数-->" .. k .. "的值:" .. v);
+end
+```
+
+```json
+get请求中参数-->parameter1的值:参数1的值
+get请求中参数-->parameter2的值:参数2的值
+```
+
+**获取请求中body参数值**
+
+假设请求url:http://localhost:8888/request/args/demo
+参数传递方式:form表单
+
+```lua
+local args_names = {"parameter1", "parameter2"}
+local args_values = request_args.post_args_by_name(args_names)
+
+for k, v in pairs(args_values) do
+    ngx.say("post请求中参数-->" .. k .. "的值:" .. v);
+end
+```
+
+```json
+post请求中参数-->parameter1的值:参数1的值
+post请求中参数-->parameter2的值:参数2的值
 ```
 
 [Back to TOC](#table-of-contents)
