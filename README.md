@@ -176,6 +176,8 @@ get请求中参数-->parameter2的值:参数2的值
 参数传递方式:form表单
 
 ```lua
+local request_args = require "request_args"
+
 local args_names = {"parameter1", "parameter2"}
 local args_values = request_args.post_args_by_name(args_names)
 
