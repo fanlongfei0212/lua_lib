@@ -67,7 +67,7 @@ rsa
 common_util
 -----------
 
-判断数组中是否包含某个值
+**判断数组中是否包含某个值**
 
 ```lua
 local common_uitl = require "common_util"
@@ -83,6 +83,66 @@ ngx.say(common_uitl.contain(source, target_false))
 ```json
 true
 false
+```
+
+**判断数组中是否包含其他数组所有值**
+
+```lua
+local common_uitl = require "common_util"
+
+local source = {"source", "source2", "source3"}
+local target_true = {"source2", "source3"}
+local target_false = {"source2", "tatget"}
+
+ngx.say(common_uitl.contains(source, target_true))
+ngx.say(common_uitl.contains(source, target_false))
+```
+
+```json
+true
+false
+```
+
+**按照指定字符分割字符串，并且返回table数组**
+
+```lua
+local common_uitl = require "common_util"
+
+local source = "1,2,3,4,5,6,7"
+local result = common_uitl.split(source, ",")
+for i, v in ipairs(result) do
+    ngx.say("下标" .. i .. "的值:" .. v)
+end
+```
+
+```json
+下标1的值:1
+下标2的值:2
+下标3的值:3
+下标4的值:4
+下标5的值:5
+下标6的值:6
+下标7的值:7
+```
+
+**数组去重**
+
+```lua
+local common_uitl = require "common_util"
+
+local source = {"1", "2", "3", "4", "4", "5", "5"}
+local result = common_uitl.distinct(source)
+for i, v in ipairs(result) do
+    ngx.say("下标" .. i .. "的值:" .. v)
+end
+```
+
+```json
+下标1的值:1
+下标2的值:2
+下标3的值:3
+下标4的值:4
+下标5的值:5
 ```
 
 [Back to TOC](#table-of-contents)
