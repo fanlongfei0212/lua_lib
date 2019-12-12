@@ -12,7 +12,7 @@ Table of Contents
 * [Components](#Components)
     * [lua-redis-parser](#lua-redis-parser)
     * [redis2-nginx-module](#redis2-nginx-module)
-* [lualib](#lualib)
+* [Lualib](#Lualib)
     * [dkjson](#dkjson)
     * [rsa](#rsa)
     * [common_uitl](#common_util)
@@ -41,7 +41,7 @@ redis2-nginx-module
 
 [Back to TOC](#table-of-contents)
 
-lualib
+Lualib
 ======
 
 在OpenResty中常用的lua类库:针对lua和json之间的序列化以及反序列化类库、rsa加密类库、获取get请求以及post中的参数、字符串的分割返回table、数组去重等等
@@ -67,9 +67,22 @@ rsa
 common_util
 -----------
 
-lua实现的一些常用工具类
+判断数组中是否包含某个值
 
 ```lua
+local common_uitl = require "common_util"
+
+local source = {"source", "source2", "source3"}
+local target_true = "source"
+local target_false = "target"
+
+ngx.say(common_uitl.contain(source, target_true))
+ngx.say(common_uitl.contain(source, target_false))
+```
+
+```json
+true
+false
 ```
 
 [Back to TOC](#table-of-contents)

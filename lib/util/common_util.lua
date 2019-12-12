@@ -1,6 +1,6 @@
 local common_util = {}
 
---判断数组中是否包含个值(非对象数组，只限string、或number)
+--判断数组中是否包含某个值(非对象数组，只限string、或number)
 function common_util.contain(array, arg)
     local result = false;
     if (not array or not arg) or type(array) ~= "table" or (type(arg) ~= "number" and type(arg) ~= "string") then
