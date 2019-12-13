@@ -1,10 +1,10 @@
 # OpenResty中lua常用类库以及组件整理
 
-* **对常用组件的使用记录整理以及描述**
+* **Components**是对常用组件的使用记录整理以及描述
 
-* **对常用类库以及自己编写类库的整理以及描述**
+* **Lualib**是已有的第三方类库资源整理
 
-* **类库使用的demo以及官方文献的资源链接**
+* **MyLualib**是项目中自己编写的lua类库
 
 Table of Contents
 =================
@@ -15,6 +15,7 @@ Table of Contents
 * [Lualib](#Lualib)
     * [dkjson](#dkjson)
     * [rsa](#rsa)
+* [MyLualib]
     * [common_uitl](#common_util)
     * [request_args](#request_args)
 
@@ -44,7 +45,7 @@ redis2-nginx-module
 Lualib
 ======
 
-在OpenResty中常用的lua类库:针对lua和json之间的序列化以及反序列化类库、rsa加密类库、获取get请求以及post中的参数、字符串的分割返回table、数组去重等等
+**在OpenResty开发中已有的第三方类库**
 
 dkjson
 ------
@@ -63,6 +64,11 @@ rsa
 主要作用:生成rea公钥、私钥对,用于对数据的rsa加密以及解密,详细信息可查阅官方文献
 
 [Back to TOC](#table-of-contents)
+
+MyLualib
+========
+
+**在项目中自己编写的类库**
 
 common_util
 -----------
