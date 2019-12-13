@@ -1,3 +1,4 @@
+local dkjson = require "dkjson"
 local request_args = {}
 
 --获取请求url参数
@@ -43,6 +44,24 @@ function request_args.post_args_by_name(arg_names)
                     end
                 end
             end
+        end
+    end
+    if not next(result) then
+        result = nil
+    end
+    return result
+end
+
+--获取请求body体参数（json格式）
+--入参:参数名称table
+--返回:将json格式的参数序列化为table
+function request_args.json_args_by_name()
+    ngx.req.read_body()
+    local args, err = ngx.req.get_post_args()
+    local result = {}
+    if args then
+        for json, boolean in pairs(args) do
+            result = dkjson.decode(json)
         end
     end
     if not next(result) then

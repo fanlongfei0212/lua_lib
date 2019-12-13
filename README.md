@@ -170,10 +170,10 @@ get请求中参数-->parameter1的值:参数1的值
 get请求中参数-->parameter2的值:参数2的值
 ```
 
-**获取请求中body参数值**
+**获取请求中body参数值(form表单)**
 
 假设请求url:http://localhost:8888/request/args/demo
-参数传递方式:form表单
+参数传递方式:parameter1=参数1的值&parameter2=参数2的值(form表单)
 
 ```lua
 local request_args = require "request_args"
@@ -184,6 +184,31 @@ local args_values = request_args.post_args_by_name(args_names)
 for k, v in pairs(args_values) do
     ngx.say("post请求中参数-->" .. k .. "的值:" .. v);
 end
+```
+
+```json
+post请求中参数-->parameter1的值:参数1的值
+post请求中参数-->parameter2的值:参数2的值
+```
+
+**获取请求中body参数值(json格式)**
+
+假设请求url:http://localhost:8888/request/args/demo
+参数传递方式:
+```json
+{
+  "parameter1":"参数1的值",
+  "parameter2":"参数2的值"
+}
+```
+
+```lua
+local request_args = require "request_args"
+
+local args_table = request_args.json_args_by_name()
+
+ngx.say("post请求body体中的json参数-->parameter1的值:" .. args_table.parameter1)
+ngx.say("post请求body体中的json参数-->parameter2的值:" .. args_table.parameter2)
 ```
 
 ```json

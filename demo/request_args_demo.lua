@@ -14,7 +14,7 @@ end
 
 request_get_args()
 
--- 获取请求body参数(form表单格式)
+--获取请求body参数(form表单格式)
 local function request_post_args()
     local args_names = {"parameter1", "parameter2"}
     local args_values = request_args.post_args_by_name(args_names)
@@ -25,3 +25,13 @@ local function request_post_args()
 end
 
 request_post_args()
+
+--获取请求body参数(json格式)
+local function request_json_args()
+    local args_table = request_args.json_args_by_name()
+
+    ngx.say("post请求body体中的json参数-->parameter1的值:" .. args_table.parameter1)
+    ngx.say("post请求body体中的json参数-->parameter2的值:" .. args_table.parameter2)
+end
+
+request_json_args()
