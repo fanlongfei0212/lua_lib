@@ -152,7 +152,7 @@ request_args
 
 **获取请求中url参数值**
 
-假设请求url:http://localhost:8888/request/args/demo?parameter1=参数1的值&parameter2=参数2的值
+* 假设请求url:http://localhost:8888/request/args/demo?parameter1=参数1的值&parameter2=参数2的值
 
 ```lua
 local request_args = require "request_args"
@@ -172,8 +172,9 @@ get请求中参数-->parameter2的值:参数2的值
 
 **获取请求中body参数值(form表单)**
 
-假设请求url:http://localhost:8888/request/args/demo
-参数传递方式:parameter1=参数1的值&parameter2=参数2的值(form表单)
+* 假设请求url:http://localhost:8888/request/args/demo
+
+* 参数传递方式:parameter1=参数1的值&parameter2=参数2的值(form表单)
 
 ```lua
 local request_args = require "request_args"
@@ -193,8 +194,10 @@ post请求中参数-->parameter2的值:参数2的值
 
 **获取请求中body参数值(json格式)**
 
-假设请求url:http://localhost:8888/request/args/demo
-参数传递方式:
+* 假设请求url:http://localhost:8888/request/args/demo
+
+* 参数传递方式:
+
 ```json
 {
   "parameter1":"参数1的值",
