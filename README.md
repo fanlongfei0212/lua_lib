@@ -18,6 +18,7 @@ Table of Contents
 * [MyLualib](#MyLualib)
     * [common_uitl](#common_util)
     * [request_args](#request_args)
+    * [response_result](#response_result)
 
 Components
 ==========
@@ -223,6 +224,75 @@ ngx.say("post请求body体中的json参数-->parameter2的值:" .. args_table.pa
 ```json
 post请求中参数-->parameter1的值:参数1的值
 post请求中参数-->parameter2的值:参数2的值
+```
+
+response_result
+---------------
+
+**将返回数据封装指定的json格式，并且支持jsonp**
+
+* 请求成功无返回数据
+
+```lua
+local response_result = require "response_result"
+
+ngx.say(response_result.success())
+```
+
+```json
+{"message":"success","data":"ok","code":0}
+```
+
+* 请求成功返回数据
+
+```lua
+local response_result = require "response_result"
+
+local data = {result_1="返回值1", result_2="返回值2"}
+ngx.say(response_result.success(data, nil, nil))
+```
+
+```json
+{"message":"success","data":{"result_1":"返回值1","result_2":"返回值2"},"code":0}
+```
+
+* 请求失败默认格式
+
+```lua
+local response_result = require "response_result"
+
+ngx.say(response_result.error())
+```
+
+```json
+{"message":"系统异常","code":500}
+```
+
+* 请求失败指定编码以及描述
+
+```lua
+local response_result = require "response_result"
+
+ngx.say(response_result.error("sys_001", "查询出错"))
+```
+
+```json
+{"message":"查询出错","code":"sys_001"}
+```
+
+* jsonp
+
+```lua
+local response_result = require "response_result"
+
+local data = {result_1="返回值1", result_2="返回值2"}
+ngx.say(response_result.jsonp_success(data, nil, nil, "callback"))
+ngx.say(response_result.jsonp_error("sys_001", "查询出错", "callback"))
+```
+
+```json
+callback({"message":"success","data":{"result_1":"返回值1","result_2":"返回值2"},"code":0})
+callback({"message":"查询出错","code":"sys_001"})
 ```
 
 [Back to TOC](#table-of-contents)
