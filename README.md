@@ -22,7 +22,7 @@ Table of Contents
     * [request_args](#request_args)
     * [response_result](#response_result)
 * [MyLuaInterface](#MyLuaInterface)
-    * [rsa](#rsa)
+    * [基于rsa的秘钥对签发接口](#基于rsa的秘钥对签发接口)
 
 Components
 ==========
@@ -308,8 +308,8 @@ MyLuaInterface
 
 **常用lua接口**
 
-rsa
----
+基于rsa的秘钥对签发接口
+-------------------
 
 **json_key_pair.lua接口:rsa秘钥对签发（返回值为json格式）**
 
