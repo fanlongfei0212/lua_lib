@@ -265,9 +265,9 @@ MyLuaInterface
 基于rsa的秘钥对签发接口
 -------------------
 
-**json_key_pair.lua接口:rsa秘钥对签发（返回值为json格式）**
+**json_key_pair.lua接口:rsa秘钥对签发（返回值为json格式）,秘钥对签发使用PKCS8格式**
 
-该接口引用了rsa.lua以及response_result.lua，进行随机rsa秘钥对的签发，可以直接作为接口在openresty中进行location配置调用
+该接口引用了rsa.lua以及response_result.lua，进行随机rsa秘钥对的签发，可以直接作为接口在OpenResty中进行location配置调用
 
 * location配置
 
@@ -281,7 +281,8 @@ content_by_lua_file json_key_pair.lua;
 local response_result = require "response_result"
 local rsa = require "rsa"
 
-local rsa_public_key, rsa_priv_key, err = rsa:generate_rsa_keys(2048)
+local isPKCS8 = true;
+local rsa_public_key, rsa_priv_key, err = rsa:generate_rsa_keys(2048, isPKCS8)
 if not rsa_public_key then
     ngx.log(ngx.ERR, '秘钥对签发失败:' , err)
     ngx.say(response_result.err(nil, "秘钥对签发失败"))
@@ -302,16 +303,17 @@ ngx.exit(ngx.OK)
 {
     "message": "success",
     "data": {
-        "publicKey": "-----BEGIN RSA PUBLIC KEY-----\nMIIBCgKCAQEA1Vkj/Hx5Ow4137JeWJoREFutx8jnQidLD53i8bMlBwMoyYIu+YS6\npFLKniyYDvJJbiBcJeZMhkaMSplgA6NHQ1PGVlFM4cP77Hal+xCoxMvzlQltsGOb\ncqK6v8qMQzseVC9qTaoekAcjMCIiXVuaILFaEX5HaX4mVrgC+1zzQ+b3ls1/umgl\nY4WSq2ojrhin1tJBgUtYhecm67OvD7x4en67VLu3rDwteNww7iFrRwZdpQ6HiWWV\nrhZaxp/uBptqWErasyAr9AdCGOg/zqh7Mrw6phJy9Ugo3ndiGceE7/cZ41yiZkLE\nsiu3OOjFHr2lf1pU8rRrN5pqsqTv/n+iFQIDAQAB\n-----END RSA PUBLIC KEY-----\n",
-        "privateKey": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEA1Vkj/Hx5Ow4137JeWJoREFutx8jnQidLD53i8bMlBwMoyYIu\n+YS6pFLKniyYDvJJbiBcJeZMhkaMSplgA6NHQ1PGVlFM4cP77Hal+xCoxMvzlQlt\nsGObcqK6v8qMQzseVC9qTaoekAcjMCIiXVuaILFaEX5HaX4mVrgC+1zzQ+b3ls1/\numglY4WSq2ojrhin1tJBgUtYhecm67OvD7x4en67VLu3rDwteNww7iFrRwZdpQ6H\niWWVrhZaxp/uBptqWErasyAr9AdCGOg/zqh7Mrw6phJy9Ugo3ndiGceE7/cZ41yi\nZkLEsiu3OOjFHr2lf1pU8rRrN5pqsqTv/n+iFQIDAQABAoIBAQCKGmzQCOcU0ksP\nZc/qvLhlBWOFmsgQK41MK6D3YkaKtoHVhx7PSBrlOe6M20MHEdF0px/fLKfGl65C\nr+vWDwCXVYhi4bfJwOq3k8o3rf4BfiBMDlFhx+idGTeX5Q5Mit1EE3lVktS72NLv\nWnkyQ5SOqx8pibvCTvWUVwMfIXkbLx2cNoV/lbRLTvMVADF/8MCmC1cJ5h4oJOhU\nopwTkb8P1/eOHOHLWju5qjOUIVJdF/MOAPrBIyUNOW+7dzW0L3zQMgUQ1vc5aWBZ\n6uK/m0/h4VFOJwimwVN4XP8MG0Bi2zJjo2ausPv3JtJBxWcrcOkGNzeo6+VCz4+t\n+vpZ0QNVAoGBAPTS5ptS5NQjkvMqqhky3GTiDJay5ruNs+ek+xzjCUFE4bBWrdxA\nHFlnRAIRM9bZGWG30wYAMQ5P0XtgH9+ZL99zktDxR4Fu6yaZK+H2vHMMcfuPTEpd\nGN86Is5acPt2zGl2jt8HhT7MinjEcduCoPJpaEjDsXWWSeCvjBhP78WzAoGBAN8W\nZ4Aa2yAltVvc6bASf+86rOhFlbQDeOA/kID/2+oPsVWdNFPO9/nxDp0rxNaSFRN/\nYYGn69SZ4Ws/6QG3advj0JKaACe9Itr6CnXn6be6JSz1ZsRYYF7hClCHZx3iXK1a\nvm8GnXOyPFI217Yyd17eNbHVt11buGCO4BepFiUXAoGAY0KawsDCDAx8SOC0ZFEN\nsE1CA1t3VvVlynZGZXjbSL4vrroF9XV8yPaoSRpGZUZSFx9bjGRJf173NMlNQu+t\nzC/kh5g7gIvDBTw24X+S+iZClFaN/Nxv+BlvATED+8A3sk6iMGSxLjvprHshGnmE\n3aPE5zOIYH9VZqZl63mFYicCgYEAnixheCgSg8mYvCh3HJsRUIqWvB1SVo87riwD\nhiNjRqKXxq8uwdl2YyXyiafV6ZksDmX7uZVZFaWBeayXxdrI2Nq/MKK2R3bH9uDg\nd9bWFKmL4EOi+MX8lmkTCiPnDf5IXbWAXnIfQz/1mwk9ivZfQslk4tE4MJ5urS/A\nXaZKiEMCgYAomb+JfhnqEIWxJNKXkNUV/mdj2K3mLM3J7CY/j7JMOdfgqPip15+S\ndy14x7Cw2E6lTXNbAlchrByf5gT41Iv4RGUynlxzgQRZqxEX3xjJHZAiSAQi3HZO\nYsenTMXg+2vbat7ahMszC5oxDdMkmOA+ptw5Ic1F2tunY6Cv1kaFsA==\n-----END RSA PRIVATE KEY-----\n"
+        "publicKey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvkpv8os9IcBlLS2riI+k\nM6BW7LoCijd6nSWFIdeWYNDIP2DcqcgPBrqWESwe1pUMlsHJR9L2yV3DxPzLymM3\nlVT24Qgrzw70sB2uLAiJcoHpyytt+soDt2/rjLwxQS9C1X7Imd7fRqI+46znFfbR\n9mTXngDR1dB66nBxMI907fmSeTpT+gWXx7So/TIwN/6p/PgD+UrJsbVlwQ/4o0/W\nGgitfTiHBk/rACUBzg/E8qiKbmMNypNtNx3flqzgs3l5QVEXq17FDphDQsWNKmiK\nM9GgqBqeVUF+AHfcMTHwZI94oibhtsNqkoMVEDkDHGeNcd1Y/bqBiZvLKQloOdMR\nZwIDAQAB\n-----END PUBLIC KEY-----\n",
+        "privateKey": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC+Sm/yiz0hwGUt\nLauIj6QzoFbsugKKN3qdJYUh15Zg0Mg/YNypyA8GupYRLB7WlQyWwclH0vbJXcPE\n/MvKYzeVVPbhCCvPDvSwHa4sCIlygenLK236ygO3b+uMvDFBL0LVfsiZ3t9Goj7j\nrOcV9tH2ZNeeANHV0HrqcHEwj3Tt+ZJ5OlP6BZfHtKj9MjA3/qn8+AP5SsmxtWXB\nD/ijT9YaCK19OIcGT+sAJQHOD8TyqIpuYw3Kk203Hd+WrOCzeXlBURerXsUOmENC\nxY0qaIoz0aCoGp5VQX4Ad9wxMfBkj3iiJuG2w2qSgxUQOQMcZ41x3Vj9uoGJm8sp\nCWg50xFnAgMBAAECggEADLY4SEGY8dpCaAQ3A0ZlN7WsWOAML2OJY1oQTLR0LT+F\nQQaddxIQPujUAY2q+ba3QpLreUrUhZsn6s7gZkK+gdFNNLcxBgH/wowZCIQBeo7H\nKXVbQXehS+3EFIC14Z7gnhZ8HBtRWwyXmun//e2hFQ6jgMCZQ+lLbMHaLd5Hd2Yp\nLabV//OSDkFfPRWifpYDAGToHPMRAEJmCQ+GpBO+flpyamTr5Ll9D3FGxIzl+WQU\nml+tMPjL/7HJSRH21aF4gSK9RDjbXA2viQRymDtmU5W/VhKuYDSCii751V2FUkBi\nji5paK2bKsyHXGh7Uy288USpJTPVFouczwk9bbqzIQKBgQDh4howKe1xJzRUPPQd\nRgYTYdxB3vuTdEJmwAW2RTPgJ7OjrcjbsbX2JhlJm664Q8wbt22wtPES86NmrsxW\npasyrrUIWPodqH7vQbgf7QkAmvV4h0IcxFLgN1E0eMJ60AR69JpyVyO83cNZfQ03\nwRqJvtctQGZ/o70tVEOjzKKAGQKBgQDXqXxQyr1mBe3TB0vIFdg3vK2QLJnx3VpN\ngg9OM95LqgDKYAXuXNLsQpPzu9AerRqITMDDJHzBYiGmsw9w7wfObmZbZiZ2Oi6j\nBSWKb+UtRGs/aVpK5kCrqXx+iOAKWhX+0HWncezfnovqTKkPypLTVz4qOiv+e/2H\nVtD3l95NfwKBgQCwVmyPUQv2G970LCl+eN3hX7ItEkBfmpED2cAbzOZ0hUnt64s0\nRwWARbnUBt9dJkA/GvFc08SnQOA9FxSaR/bgOBdHjv6jDJkberic49T1TgN3tk/c\nWT9Bnq2cQvHAIoh83Ft+C5zwokcQo1kgP3XSNtOQlgfueQsEShYL14K8cQKBgQCP\nvZ5nNwoP0wnVqro+zRiE5dQFEUU2KOQEXxiWdgnHArNuL5wkaGgJIsL8JAUuPRA/\nInEkX9BrEF3/fr9e9WKNm5XLe4VNLbBh5Y9E+xmUF1MoO6771wXppJieudoh7DNW\n2Fhi15Ma5NC6xIe2R72e8To06Prjrn6n0xyKugVoPwKBgQCPe8P6Ame36vxL5mWF\nPif9znvI9r09KX0zlmb0EDSw9DKC1r9CJnb40JjF0qg3PRDkMUJ0ulD792Le/2Dw\nmsqLiJMIhjjGXGKw8A+rhD1gkgUsqgGQApXqA/cirWOdDLT/QLifzV0wReAgAWNF\nC6n1ywtsqjqmYWUFTZ8UA+RCeQ==\n-----END PRIVATE KEY-----\n"
     },
     "code": 0
 }
+
 ```
 
-**text_key_pair.lua接口:rsa秘钥对签发（返回值为text/html格式）**
+**text_key_pair.lua接口:rsa秘钥对签发（返回值为text/html格式）,秘钥对签发使用PKCS8格式**
 
-该接口引用了rsa.lua以及response_result.lua，进行随机rsa秘钥对的签发，可以直接作为接口在openresty中进行location配置调用
+该接口引用了rsa.lua以及response_result.lua，进行随机rsa秘钥对的签发，可以直接作为接口在OpenResty中进行location配置调用
 
 * location配置
 
@@ -325,7 +327,8 @@ content_by_lua_file text_key_pair.lua;
 local response_result = require "response_result"
 local rsa = require "rsa"
 
-local rsa_public_key, rsa_priv_key, err = rsa:generate_rsa_keys(2048)
+local isPKCS8 = true;
+local rsa_public_key, rsa_priv_key, err = rsa:generate_rsa_keys(2048, isPKCS8)
 if not rsa_public_key then
     ngx.log(ngx.ERR, '秘钥对签发失败:' , err)
     ngx.say(response_result.err(nil, "秘钥对签发失败"))
@@ -341,42 +344,178 @@ ngx.exit(ngx.OK)
 * 响应结果
 
 ```text
------BEGIN RSA PUBLIC KEY-----
-MIIBCgKCAQEA7TcyWx1/JtI5Kf1IDq9E1bSh9KkXYvRWoVahsQ2O14dUukOyPXdb
-TReMW217IBU11SL7cONffTXlkWXg/rfTlHeTAPun2zc5xVUqjh3EDFNMnI1bhDn5
-/VrjB77nEKoRojlRJDO6b2myhhwEMUaF54dkXdRt599WsOxtuB5BUHA0WbqImFEC
-b8aXzQvkn5K+g4W6D4jKJtv5Irij+V3K2GpovCLNYle+47uaA75g8eBdTx03MsMd
-ocIZS2VrrUWD7c7Ybn2I5x/o2QoIuxjrrWNc5trz2/NI8va9Wqrisg7CjZeIz3OY
-zTPTFONkM7t/TEEkEtRu72Auu1GGxYwQMwIDAQAB
------END RSA PUBLIC KEY-----
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA26+HZF10FkQfkYAClmzE
+foZeMDYJJRgvEHe2DoUnoVX+LjrTtjqkb9yGEnCW6N9IoC5AZm5hbEifaXMuJs0z
+38S8oaKvWvVGGC5rCxWrWKlJFBIwlgShW+7fdOwqVc7/CzD68oVcyIzXYgOT2Lka
+WYQ2cnIi0KMd3kFbAjzDgn6DpxbPsshpy8LJaY5a3mkVIgwSvweCNPaKbkEEFGqp
+PI1zNq/zP7CEm6rkNvwn50WaaK+rmmQx38cjJ6zNhgT9oqGXBEQkeFpztMbebOkD
+x+HXKoBGCbAy3qpXSyy8svnAzFxvqwHRRHn6Cit6HCsULqIKOi6XyUqVpXFCFOex
+6QIDAQAB
+-----END PUBLIC KEY-----
 
------BEGIN RSA PRIVATE KEY-----
-MIIEpAIBAAKCAQEA7TcyWx1/JtI5Kf1IDq9E1bSh9KkXYvRWoVahsQ2O14dUukOy
-PXdbTReMW217IBU11SL7cONffTXlkWXg/rfTlHeTAPun2zc5xVUqjh3EDFNMnI1b
-hDn5/VrjB77nEKoRojlRJDO6b2myhhwEMUaF54dkXdRt599WsOxtuB5BUHA0WbqI
-mFECb8aXzQvkn5K+g4W6D4jKJtv5Irij+V3K2GpovCLNYle+47uaA75g8eBdTx03
-MsMdocIZS2VrrUWD7c7Ybn2I5x/o2QoIuxjrrWNc5trz2/NI8va9Wqrisg7CjZeI
-z3OYzTPTFONkM7t/TEEkEtRu72Auu1GGxYwQMwIDAQABAoIBAETb0PJCDbbnL1DR
-BSm+Fu0yEhFDRFalNsB+tVD/7ocB8cZgAE13aDlorIWdsjAN+CJ2lSaf2ggurQUX
-3cgS9IgUbcfLRV6NGWf+4OuAGHi7dXG8VuR7L+Yri9ujvs9HjvbYTIWFvoi41em4
-GD91iUk8NBZIo967Jh8VgoP/xFXkrTLGiYWqtqdV6je4Ycy2slHp87wiGJSQtTXr
-vSqRPrJU0+msxEZktcrtkNidVY5ooK7xPI28VJiMHJR5tYBYHRke/D69QuDz12zk
-IpLg0lroCDGSq14BwF7F1VWFfQ1vJ8FFVQKHoPI1CNmjBOXcwMO00xo+gGLFQJSL
-yJi22oECgYEA/A+P9lUDsDLIylXyjB+Hacnf2/xhbJW2XVDHz+8HxDTy+Tzzluwd
-ko3EDOGk03de/VrCYdYBa0jjvLLxc5PmsevA4l0p8wAVQRafaEySxpYE+QBIDyc9
-HXnkDEoUlIR17O/H3i7wnvD3x5HyWP4/K22HGMWi1JpXtEnjmx5b3Z0CgYEA8Ow9
-/7Ce+Nu4BbEyaJRiU/ahRR/+ZMw7OR7K5Ii+HB8BXQAk59UOhGa3Ozu+7trFo6yh
-uuS2CelUfwlnj/h15IH/5N+tj+Xf6WsPxjs8OWM7eAKiAYxFzSlTcZybOQnoNn+1
-GWeAIVgrv4aoSiyix0S1AB48OaRn0G8cJG8AJA8CgYEA9mVAFUyFjngWT7Q0pUUs
-2fy9GA5eLgcrfYy5xkmjDem0mm86rw2g2uI6A12QAiduc7uEyJ6qRHW8KXnDDXhG
-yyXqJ11q5F/wZu/2Y752vClqMv5TcnypAWdlxZ2lAIl7vWGnv0mjbbugezXv8Y6X
-sZwfs9d+lNVLZrHUDI5gvwECgYEAz8SMOyNQFYE2lAIaXMIKgiphLcHHm5ndQQdj
-Je8fNBUxEcj8CspceKY0Qmrl4ArfAqXv28M9khKdAelUXH6C/Qt3aSPVBBHUJfJk
-ainPaBZBxN9QY1FbKPEIuyO5YVk/3zAHN99gSmFFaShxnXYc8wg3p+BrQ7KarNAF
-Tw5C6tUCgYAgGngW1UBrQ/TREp7MCCDMCBE09f+jhytlsnT9RC052qzfUk72HFXJ
-K+4/FQrR8RM1FH/DP09KQkzhOtxmhvYiwMEFGK8AsOff3WJTP5ju1q9ueKPKsFro
-XTg8J93svQt767HY1lEvXsmf5EVrFTJuX9CUhUPiuaBR7OuSLjQGCw==
------END RSA PRIVATE KEY-----
+-----BEGIN PRIVATE KEY-----
+MIIEwAIBADANBgkqhkiG9w0BAQEFAASCBKowggSmAgEAAoIBAQDbr4dkXXQWRB+R
+gAKWbMR+hl4wNgklGC8Qd7YOhSehVf4uOtO2OqRv3IYScJbo30igLkBmbmFsSJ9p
+cy4mzTPfxLyhoq9a9UYYLmsLFatYqUkUEjCWBKFb7t907CpVzv8LMPryhVzIjNdi
+A5PYuRpZhDZyciLQox3eQVsCPMOCfoOnFs+yyGnLwslpjlreaRUiDBK/B4I09opu
+QQQUaqk8jXM2r/M/sISbquQ2/CfnRZpor6uaZDHfxyMnrM2GBP2ioZcERCR4WnO0
+xt5s6QPH4dcqgEYJsDLeqldLLLyy+cDMXG+rAdFEefoKK3ocKxQuogo6LpfJSpWl
+cUIU57HpAgMBAAECggEBANKFY/aPA9buk13oURJ7ytUAyLPkpGDSyw852NITUgXu
+lTUSFJ31lmzH5Ac5s7QXfM5bZEWEk4GkGnd/9AMk9AgEzUsLzoUYtIIpwVSPAHNn
+TmuYfszURRkHUUYHpw4x3gCIgIL1wBNDvIblrMGrqI+N/msv6yMKnW3GLYN4XVbn
+RZeDWgZv/W8gcz5L00ioWkf4al6K+bpjogBid65mhrZt9N6Mtdec+ms91I/U2aDd
+4JNV80opvhkd2PAjluLCSQSNnoquikrd7rz4jCaoWMp/AHLU3KZjpB7R5Hsk43Vk
+prr/T78YK9FkPh4iSP5ULqisoCLGrSfNbLFcz2c9m7ECgYEA7YZRk7wdd+iHFHq9
+95+mi0oS1HsIEUOAGwTMWQFx6Dsdy3w1imdurlRQLQ6yHh5IvAzul4PIRaC6/YVd
+7jdCwBoGJPnD+W6/LNYGFOA63ntZP4ORDuU/SAMtbp8j9rKwfM0TuTy6IAlvNNdC
+J9U0z3LwimIszCSyJAhSXm8ip+0CgYEA7MX+Kz9sqh/+fg0qWARo+LU2clHA84te
+IY5DIzrcZSO9Mj2zv5cBZ18dHbu0ZtawpSwIE2pPd8Sx/yeFgH87kQHq5Ba/2e5S
+yFT0ZWQ1ltCPSB8MNS00LODaKfDKbt3FsTm7qNW6J0fAZKfccresX96JL6iQfyiV
+9qN6QD00um0CgYEA7KEl4DJGgVDMUeC+JFWOy7Ft9PTk4p4Gn+Q12G4SFrPeSPxj
+MpE8uLwSa/D6DftJpt6TS6rj+EnaP/t/ynSPMWY7vNZ/IJ3uIzLNODrzKvZjwVzH
+RLmqQ4m21z//yiPWo16DScVv/76mZVQV+izzwb/WV2bbDj14o2EO/jllozkCgYEA
+u9hQz8rf0RDU/PhA8dd92GMcMRI/PHkDUyfkh9y44dy6y1M8efG5gWNqXB6A/12w
+gzotpgmfxmtctAuM1OccQOz+h7qstp9nOdx8kLwx79bC9fr72mxkin5RVxjb4Z08
+rGAbS9VUfLlmH/U05iZmMSECQbc//EIcx7Hm2XQ1kvkCgYEAnnSCl+nY5HVkKU+5
+6MSfoPkMJwPK+Hb0UtGDWFdfSX5wm5TSohBzuNthong4SMUImmKYJOaMuj1du6sw
+ZQlW7CFvd1G3k0Pw3lis6KHOov/cIaES2oBPu/+hR1KrjSQ10Ixa/3qjAnyaftcy
+drNLRsBmwYGgBK0pKVgl/fE/998=
+-----END PRIVATE KEY-----
+```
+
+**java加密，lua解密**
+
+项目中将数据在Java中进行加密，在OpenResty中使用lua进行解密；在此提供Java中需要的工具类
+
+* Java和lua使用的同一秘钥对
+
+```
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA26+HZF10FkQfkYAClmzE
+foZeMDYJJRgvEHe2DoUnoVX+LjrTtjqkb9yGEnCW6N9IoC5AZm5hbEifaXMuJs0z
+38S8oaKvWvVGGC5rCxWrWKlJFBIwlgShW+7fdOwqVc7/CzD68oVcyIzXYgOT2Lka
+WYQ2cnIi0KMd3kFbAjzDgn6DpxbPsshpy8LJaY5a3mkVIgwSvweCNPaKbkEEFGqp
+PI1zNq/zP7CEm6rkNvwn50WaaK+rmmQx38cjJ6zNhgT9oqGXBEQkeFpztMbebOkD
+x+HXKoBGCbAy3qpXSyy8svnAzFxvqwHRRHn6Cit6HCsULqIKOi6XyUqVpXFCFOex
+6QIDAQAB
+-----END PUBLIC KEY-----
+
+-----BEGIN PRIVATE KEY-----
+MIIEwAIBADANBgkqhkiG9w0BAQEFAASCBKowggSmAgEAAoIBAQDbr4dkXXQWRB+R
+gAKWbMR+hl4wNgklGC8Qd7YOhSehVf4uOtO2OqRv3IYScJbo30igLkBmbmFsSJ9p
+cy4mzTPfxLyhoq9a9UYYLmsLFatYqUkUEjCWBKFb7t907CpVzv8LMPryhVzIjNdi
+A5PYuRpZhDZyciLQox3eQVsCPMOCfoOnFs+yyGnLwslpjlreaRUiDBK/B4I09opu
+QQQUaqk8jXM2r/M/sISbquQ2/CfnRZpor6uaZDHfxyMnrM2GBP2ioZcERCR4WnO0
+xt5s6QPH4dcqgEYJsDLeqldLLLyy+cDMXG+rAdFEefoKK3ocKxQuogo6LpfJSpWl
+cUIU57HpAgMBAAECggEBANKFY/aPA9buk13oURJ7ytUAyLPkpGDSyw852NITUgXu
+lTUSFJ31lmzH5Ac5s7QXfM5bZEWEk4GkGnd/9AMk9AgEzUsLzoUYtIIpwVSPAHNn
+TmuYfszURRkHUUYHpw4x3gCIgIL1wBNDvIblrMGrqI+N/msv6yMKnW3GLYN4XVbn
+RZeDWgZv/W8gcz5L00ioWkf4al6K+bpjogBid65mhrZt9N6Mtdec+ms91I/U2aDd
+4JNV80opvhkd2PAjluLCSQSNnoquikrd7rz4jCaoWMp/AHLU3KZjpB7R5Hsk43Vk
+prr/T78YK9FkPh4iSP5ULqisoCLGrSfNbLFcz2c9m7ECgYEA7YZRk7wdd+iHFHq9
+95+mi0oS1HsIEUOAGwTMWQFx6Dsdy3w1imdurlRQLQ6yHh5IvAzul4PIRaC6/YVd
+7jdCwBoGJPnD+W6/LNYGFOA63ntZP4ORDuU/SAMtbp8j9rKwfM0TuTy6IAlvNNdC
+J9U0z3LwimIszCSyJAhSXm8ip+0CgYEA7MX+Kz9sqh/+fg0qWARo+LU2clHA84te
+IY5DIzrcZSO9Mj2zv5cBZ18dHbu0ZtawpSwIE2pPd8Sx/yeFgH87kQHq5Ba/2e5S
+yFT0ZWQ1ltCPSB8MNS00LODaKfDKbt3FsTm7qNW6J0fAZKfccresX96JL6iQfyiV
+9qN6QD00um0CgYEA7KEl4DJGgVDMUeC+JFWOy7Ft9PTk4p4Gn+Q12G4SFrPeSPxj
+MpE8uLwSa/D6DftJpt6TS6rj+EnaP/t/ynSPMWY7vNZ/IJ3uIzLNODrzKvZjwVzH
+RLmqQ4m21z//yiPWo16DScVv/76mZVQV+izzwb/WV2bbDj14o2EO/jllozkCgYEA
+u9hQz8rf0RDU/PhA8dd92GMcMRI/PHkDUyfkh9y44dy6y1M8efG5gWNqXB6A/12w
+gzotpgmfxmtctAuM1OccQOz+h7qstp9nOdx8kLwx79bC9fr72mxkin5RVxjb4Z08
+rGAbS9VUfLlmH/U05iZmMSECQbc//EIcx7Hm2XQ1kvkCgYEAnnSCl+nY5HVkKU+5
+6MSfoPkMJwPK+Hb0UtGDWFdfSX5wm5TSohBzuNthong4SMUImmKYJOaMuj1du6sw
+ZQlW7CFvd1G3k0Pw3lis6KHOov/cIaES2oBPu/+hR1KrjSQ10Ixa/3qjAnyaftcy
+drNLRsBmwYGgBK0pKVgl/fE/998=
+-----END PRIVATE KEY-----
+```
+
+* Java公钥加密
+
+**示例代码假设是调用lua的rsa秘钥签发接口后，存储至数据库，然后从数据库中查出公钥**
+**项目提供RsaUtil的Java工具类以及Base64Util的Java工具类**
+**秘钥格式PKCS8**
+**Java的RsaUtil和Base64Util的源码可在项目中自行查看**
+
+```java
+public static void main(String[] args) throws Exception {
+    Map<String, String> map = RsaUtil.getKeyPairMap(RsaUtil.getKeyPair());
+    map.put("public",
+            "-----BEGIN PUBLIC KEY-----\n" +
+            "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA26+HZF10FkQfkYAClmzE\n" +
+            "foZeMDYJJRgvEHe2DoUnoVX+LjrTtjqkb9yGEnCW6N9IoC5AZm5hbEifaXMuJs0z\n" +
+            "38S8oaKvWvVGGC5rCxWrWKlJFBIwlgShW+7fdOwqVc7/CzD68oVcyIzXYgOT2Lka\n" +
+            "WYQ2cnIi0KMd3kFbAjzDgn6DpxbPsshpy8LJaY5a3mkVIgwSvweCNPaKbkEEFGqp\n" +
+            "PI1zNq/zP7CEm6rkNvwn50WaaK+rmmQx38cjJ6zNhgT9oqGXBEQkeFpztMbebOkD\n" +
+            "x+HXKoBGCbAy3qpXSyy8svnAzFxvqwHRRHn6Cit6HCsULqIKOi6XyUqVpXFCFOex\n" +
+            "6QIDAQAB\n" +
+            "-----END PUBLIC KEY-----"
+    );
+    String uid = "测试数据";
+    String eUid = RsaUtil.publicEncrypt(uid, map.get("public"));
+    System.out.println(eUid);
+}
+```
+
+```text
+mIB22N5eLokGQRtLSNzZ/wuXnKZhmBmRhIitcluBAn+yCayyEio/IBADzlT4muBkpW11ljdjsXUZfSHp/YAKbmJXV0Da9zCN593KK3Bob5o2Q7T5EK/N7jPIR5mXj1ZAtLosWq7+JFiQ/6LonVMuKbJDZYmfUDlxmYHXCrd1miFAwpsj3VVnCcd7xh0yswWfVN2XK7PdiaDOB3s5XqQ97lJPLDlUjNL4Dw3vWg9JJI48gvo3bO0JHt4WhvFGrr+Ho79/m5cNq5h+pB0WhDnzSOagMVtaAls1abgaOOxPE9Cjp7WLDiWdFFnnU93XHS03vKb2uC0RFQ+sRFElrtXGVQ==
+```
+
+* lua私钥解密
+
+**示例代码假设是调用lua的rsa秘钥签发接口后，存储至数据库，然后从数据库中查出私钥**
+
+```lua
+local rsa = require "rsa"
+
+local private_key = [[-----BEGIN PRIVATE KEY-----
+MIIEwAIBADANBgkqhkiG9w0BAQEFAASCBKowggSmAgEAAoIBAQDbr4dkXXQWRB+R
+gAKWbMR+hl4wNgklGC8Qd7YOhSehVf4uOtO2OqRv3IYScJbo30igLkBmbmFsSJ9p
+cy4mzTPfxLyhoq9a9UYYLmsLFatYqUkUEjCWBKFb7t907CpVzv8LMPryhVzIjNdi
+A5PYuRpZhDZyciLQox3eQVsCPMOCfoOnFs+yyGnLwslpjlreaRUiDBK/B4I09opu
+QQQUaqk8jXM2r/M/sISbquQ2/CfnRZpor6uaZDHfxyMnrM2GBP2ioZcERCR4WnO0
+xt5s6QPH4dcqgEYJsDLeqldLLLyy+cDMXG+rAdFEefoKK3ocKxQuogo6LpfJSpWl
+cUIU57HpAgMBAAECggEBANKFY/aPA9buk13oURJ7ytUAyLPkpGDSyw852NITUgXu
+lTUSFJ31lmzH5Ac5s7QXfM5bZEWEk4GkGnd/9AMk9AgEzUsLzoUYtIIpwVSPAHNn
+TmuYfszURRkHUUYHpw4x3gCIgIL1wBNDvIblrMGrqI+N/msv6yMKnW3GLYN4XVbn
+RZeDWgZv/W8gcz5L00ioWkf4al6K+bpjogBid65mhrZt9N6Mtdec+ms91I/U2aDd
+4JNV80opvhkd2PAjluLCSQSNnoquikrd7rz4jCaoWMp/AHLU3KZjpB7R5Hsk43Vk
+prr/T78YK9FkPh4iSP5ULqisoCLGrSfNbLFcz2c9m7ECgYEA7YZRk7wdd+iHFHq9
+95+mi0oS1HsIEUOAGwTMWQFx6Dsdy3w1imdurlRQLQ6yHh5IvAzul4PIRaC6/YVd
+7jdCwBoGJPnD+W6/LNYGFOA63ntZP4ORDuU/SAMtbp8j9rKwfM0TuTy6IAlvNNdC
+J9U0z3LwimIszCSyJAhSXm8ip+0CgYEA7MX+Kz9sqh/+fg0qWARo+LU2clHA84te
+IY5DIzrcZSO9Mj2zv5cBZ18dHbu0ZtawpSwIE2pPd8Sx/yeFgH87kQHq5Ba/2e5S
+yFT0ZWQ1ltCPSB8MNS00LODaKfDKbt3FsTm7qNW6J0fAZKfccresX96JL6iQfyiV
+9qN6QD00um0CgYEA7KEl4DJGgVDMUeC+JFWOy7Ft9PTk4p4Gn+Q12G4SFrPeSPxj
+MpE8uLwSa/D6DftJpt6TS6rj+EnaP/t/ynSPMWY7vNZ/IJ3uIzLNODrzKvZjwVzH
+RLmqQ4m21z//yiPWo16DScVv/76mZVQV+izzwb/WV2bbDj14o2EO/jllozkCgYEA
+u9hQz8rf0RDU/PhA8dd92GMcMRI/PHkDUyfkh9y44dy6y1M8efG5gWNqXB6A/12w
+gzotpgmfxmtctAuM1OccQOz+h7qstp9nOdx8kLwx79bC9fr72mxkin5RVxjb4Z08
+rGAbS9VUfLlmH/U05iZmMSECQbc//EIcx7Hm2XQ1kvkCgYEAnnSCl+nY5HVkKU+5
+6MSfoPkMJwPK+Hb0UtGDWFdfSX5wm5TSohBzuNthong4SMUImmKYJOaMuj1du6sw
+ZQlW7CFvd1G3k0Pw3lis6KHOov/cIaES2oBPu/+hR1KrjSQ10Ixa/3qjAnyaftcy
+drNLRsBmwYGgBK0pKVgl/fE/998=
+-----END PRIVATE KEY-----]]
+
+local uid = "mIB22N5eLokGQRtLSNzZ/wuXnKZhmBmRhIitcluBAn+yCayyEio/IBADzlT4muBkpW11ljdjsXUZfSHp/YAKbmJXV0Da9zCN593KK3Bob5o2Q7T5EK/N7jPIR5mXj1ZAtLosWq7+JFiQ/6LonVMuKbJDZYmfUDlxmYHXCrd1miFAwpsj3VVnCcd7xh0yswWfVN2XK7PdiaDOB3s5XqQ97lJPLDlUjNL4Dw3vWg9JJI48gvo3bO0JHt4WhvFGrr+Ho79/m5cNq5h+pB0WhDnzSOagMVtaAls1abgaOOxPE9Cjp7WLDiWdFFnnU93XHS03vKb2uC0RFQ+sRFElrtXGVQ=="
+
+local priv, err = rsa:new({ private_key = private_key, key_type = rsa.KEY_TYPE.PKCS8 })
+
+if not priv then
+    ngx.log(ngx.ERR, "解密失败：", "秘钥错误")
+    ngx.log(ngx.ERR, "err", err)
+    ngx.say("解密失败，伪造的密文")
+    ngx.exit(ngx.OK)
+end
+
+local data = priv:decrypt(ngx.decode_base64(uid))
+ngx.say(data)
+ngx.exit(ngx.OK)
+```
+
+```text
+测试数据
 ```
 
 [Back to TOC](#table-of-contents)
