@@ -4,71 +4,25 @@
 
 * **Lualib**是已有的第三方类库资源整理
 
-* **MyLualib**是项目中自己编写的lua类库
+* **MyLualib**是自己编写的常用lua类库
 
-* **MyLuaInterface**项目中用到的lua接口
+* **MyLuaInterface**自己编写的常用lua接口
 
 Table of Contents
 =================
 
-* [Components](#Components)
-    * [lua-redis-parser](#lua-redis-parser)
-    * [redis2-nginx-module](#redis2-nginx-module)
-* [Lualib](#Lualib)
-    * [dkjson](#dkjson)
-    * [rsa](#rsa)
 * [MyLualib](#MyLualib)
     * [common_uitl](#common_util)
     * [request_args](#request_args)
     * [response_result](#response_result)
 * [MyLuaInterface](#MyLuaInterface)
     * [基于rsa的秘钥对签发接口](#基于rsa的秘钥对签发接口)
-
-Components
-==========
-
-在OpenResty中经常用到的组件:针对redis操作、对redis原生命令的解析以及转换等等
-
-lua-redis-parser
-----------------
-
-**[官方文献](https://github.com/openresty/lua-redis-parser#parse_reply)**
-
-主要作用:将lua中的table格式的redis命令转化成redis的原生命令,将redis返回的原生命令解析为lua中table,以及其他，详细信息可查阅官方文献
-
-[Back to TOC](#table-of-contents)
-
-redis2-nginx-module
--------------------
-
-**[官方文献](https://github.com/openresty/redis2-nginx-module)**
-
-主要作用:支持在OpenResty中lua对redis的各种操作,详细信息可查阅官方文献
-
-[Back to TOC](#table-of-contents)
-
-Lualib
-======
-
-**在OpenResty开发中已有的第三方类库**
-
-dkjson
-------
-
-**[官方文献](http://dkolf.de/src/dkjson-lua.fsl/home)** 
-
-主要作用:可以将lua的table转换为json格式(encode函数),可以将json格式的数据解析为lua中的table格式(decode函数),详细信息可查阅官方文献
-
-[Back to TOC](#table-of-contents)
-
-rsa
----
-
-**[官方文献](https://github.com/spacewander/lua-resty-rsa)**
-
-主要作用:生成rea公钥、私钥对,用于对数据的rsa加密以及解密,详细信息可查阅官方文献
-
-[Back to TOC](#table-of-contents)
+* [Components](#Components)
+    * [lua-redis-parser](#lua-redis-parser)
+    * [redis2-nginx-module](#redis2-nginx-module)
+* [Lualib](#Lualib)
+    * [dkjson](#dkjson)
+    * [rsa](#rsa)
 
 MyLualib
 ========
@@ -386,8 +340,6 @@ ngx.exit(ngx.OK)
 
 * 响应结果
 
-**注意：序列化后会带换行符**
-
 ```text
 -----BEGIN RSA PUBLIC KEY-----
 MIIBCgKCAQEA7TcyWx1/JtI5Kf1IDq9E1bSh9KkXYvRWoVahsQ2O14dUukOyPXdb
@@ -426,3 +378,51 @@ K+4/FQrR8RM1FH/DP09KQkzhOtxmhvYiwMEFGK8AsOff3WJTP5ju1q9ueKPKsFro
 XTg8J93svQt767HY1lEvXsmf5EVrFTJuX9CUhUPiuaBR7OuSLjQGCw==
 -----END RSA PRIVATE KEY-----
 ```
+
+[Back to TOC](#table-of-contents)
+
+Components
+==========
+
+在OpenResty中经常用到的组件:针对redis操作、对redis原生命令的解析以及转换等等
+
+lua-redis-parser
+----------------
+
+**[官方文献](https://github.com/openresty/lua-redis-parser#parse_reply)**
+
+主要作用:将lua中的table格式的redis命令转化成redis的原生命令,将redis返回的原生命令解析为lua中table,以及其他，详细信息可查阅官方文献
+
+[Back to TOC](#table-of-contents)
+
+redis2-nginx-module
+-------------------
+
+**[官方文献](https://github.com/openresty/redis2-nginx-module)**
+
+主要作用:支持在OpenResty中lua对redis的各种操作,详细信息可查阅官方文献
+
+[Back to TOC](#table-of-contents)
+
+Lualib
+======
+
+**在OpenResty开发中已有的第三方类库**
+
+dkjson
+------
+
+**[官方文献](http://dkolf.de/src/dkjson-lua.fsl/home)** 
+
+主要作用:可以将lua的table转换为json格式(encode函数),可以将json格式的数据解析为lua中的table格式(decode函数),详细信息可查阅官方文献
+
+[Back to TOC](#table-of-contents)
+
+rsa
+---
+
+**[官方文献](https://github.com/spacewander/lua-resty-rsa)**
+
+主要作用:生成rea公钥、私钥对,用于对数据的rsa加密以及解密,详细信息可查阅官方文献
+
+[Back to TOC](#table-of-contents)
