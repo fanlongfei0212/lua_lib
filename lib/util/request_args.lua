@@ -3,7 +3,7 @@ local request_args = {}
 
 --获取请求url参数
 --入参:参数名称table
---返回:返回参数名称已经对应的值table
+--返回:返回参数名称以及对应的值table
 function request_args.get_args_by_name(arg_names)
     local args, err = ngx.req.get_uri_args();
     local result = {}
@@ -28,7 +28,7 @@ end
 
 --获取请求body体参数（form表单格式）
 --入参:参数名称table
---返回:返回参数名称已经对应的值table
+--返回:返回参数名称以及对应的值table
 function request_args.post_args_by_name(arg_names)
     ngx.req.read_body()
     local args, err = ngx.req.get_post_args()
