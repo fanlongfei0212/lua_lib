@@ -392,14 +392,12 @@ end
 key:host value:localhost:8888
 key:connection value:keep-alive
 key:sec-fetch-site value:cross-site
-key:accept-language value:zh-CN,zh;q=0.9
-key:cookie value:_ga=GA1.1.515272813.1557485115; JSESSIONID=B2EB55361EDCBE1F179AE702D4900548
+key:sec-fetch-mode value:cors
 key:accept-encoding value:gzip, deflate, br
-key:text2 value:2
 key:user-agent value:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36
 key:accept value:*/*
-key:sec-fetch-mode value:cors
-key:text1 value:1
+key:cookie value:_ga=GA1.1.515272813.1557485115; JSESSIONID=B2EB55361EDCBE1F179AE702D4900548
+key:accept-language value:zh-CN,zh;q=0.9
 ```
 
 **获取请求头中指定的值**
