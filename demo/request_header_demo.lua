@@ -4,7 +4,11 @@ local function get_header_all()
     local result = request_header.get_header_all()
     if result then
         for k, v in pairs(result) do
-            ngx.say("key:" .. k .. " value:" .. v)
+            if type(v) == "table" then
+                ngx.say("key:" .. k .. " value:" .. table.concat( v, "," ))
+            else
+                ngx.say("key:" .. k .. " value:" .. v)
+            end
         end
     end
 end
@@ -16,7 +20,11 @@ local function get_header()
     local result = request_header.get_header(args)
     if result then
         for k, v in pairs(result) do
-            ngx.say("key:" .. k .. " value:" .. v)
+            if type(v) == "table" then
+                ngx.say("key:" .. k .. " value:" .. table.concat( v, "," ))
+            else
+                ngx.say("key:" .. k .. " value:" .. v)
+            end
         end
     end
 end

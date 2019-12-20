@@ -41,3 +41,39 @@ local function common_uitl_distinct_demo()
 end
 
 common_uitl_distinct_demo()
+
+local function common_uitl_is_array()
+    local source_array = {"1", "2", "3", "4", "4", "5", "5"}
+    local source_not_array = {"1", filed_1="属性1", filed_2="属性2"}
+    local source_yet_array = {
+        "1", 
+        "2", 
+        {filed_1="属性1", filed_2="属性2", filed_3="属性3"}
+    }
+    local source_object = {filed_1="属性1", filed_2="属性2", filed_3="属性3"}
+    local source_object_array = {
+        {filed_1="属性1", filed_2="属性2", filed_3="属性3"},
+        {filed_1="属性1", filed_2="属性2", filed_3="属性3"},
+        {filed_1="属性1", filed_2="属性2", filed_3="属性3"}
+    }
+    ngx.say(common_uitl.is_array(source_array))
+    ngx.say(common_uitl.is_array(source_not_array))
+    ngx.say(common_uitl.is_array(source_yet_array))
+    ngx.say(common_uitl.is_array(source_object))
+    ngx.say(common_uitl.is_array(source_object_array))
+end
+
+common_uitl_is_array()
+
+local function common_uitl_kv_separate()
+    local object = {filed_1="属性1", filed_2="属性2", filed_3="属性3"}
+    local k_array, v_array = common_uitl.kv_separate(object)
+    for i, v in ipairs(k_array) do
+        ngx.say("分离出的k:" .. v)
+    end
+    for i, v in ipairs(v_array) do
+        ngx.say("分离出的v:" .. v)
+    end
+end
+
+common_uitl_kv_separate()

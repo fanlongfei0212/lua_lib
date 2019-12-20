@@ -428,6 +428,98 @@ key:text1 value:1
 key:text2 value:2
 ```
 
+**添加请求头**
+
+在nginx接收到请求之后，需要进行调用子请求并且需要添加请求头让子请求可以获取到时使用，可以同时设置多个；并且在设置请求头时如果设置的请求头中包含原请求头中已经存在的值，可以选择进行替换或者不替换，替换则将相同的请求头内容进行更新，不替换则保留相同请求头中之前的内容；成功返回ture，失败返回false
+
+* 假设请求url:http://localhost:8888/common/request_header/demo
+
+* 假设子请求url:/common/request_header/demo/capture
+
+* 原始请求头中数据:
+
+```text
+key:host value:localhost:8888
+key:connection value:keep-alive
+key:sec-fetch-site value:cross-site
+key:sec-fetch-mode value:cors
+key:accept-encoding value:gzip, deflate, br
+key:user-agent value:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36
+key:accept value:*/*
+key:cookie value:_ga=GA1.1.515272813.1557485115; JSESSIONID=B3A27B8FB81DA40A0773EAAD67ABC35E
+key:accept-language value:zh-CN,zh;q=0.9
+```
+
+* 设置请求头与原请求头中出现相同时不替换相同的内容
+
+调用的子请求(**ngx.location.capture("/common/request_header/demo/capture")**)中的操作就是获取所有的请求头内容，以此验证设置请求头是否成功
+
+```lua
+local request_header = require "request_header"
+
+local edit_header_table = {
+    cookie="cookie_test", 
+    test1="test1", 
+    test_2="test_2", 
+    test3={"test3_1", "test3_2"}
+}
+local set_result = request_header.set_header(edit_header_table, false)
+local result = ngx.location.capture("/common/request_header/demo/capture")
+ngx.say(set_result)
+ngx.say(result.body)
+```
+
+```text
+true
+key:host value:localhost:8888
+key:connection value:keep-alive
+key:sec-fetch-site value:cross-site
+key:accept value:*/*
+key:accept-language value:zh-CN,zh;q=0.9
+key:test_2 value:test_2
+key:accept-encoding value:gzip, deflate, br
+key:user-agent value:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36
+key:test1 value:test1
+key:cookie value:_ga=GA1.1.515272813.1557485115; JSESSIONID=B3A27B8FB81DA40A0773EAAD67ABC35E
+key:test3 value:test3_1,test3_2
+key:sec-fetch-mode value:cors
+```
+
+* 设置请求头与原请求头中出现相同时替换相同的内容
+
+调用的子请求(**ngx.location.capture("/common/request_header/demo/capture")**)中的操作就是获取所有的请求头内容，以此验证设置请求头是否成功
+
+```lua
+local request_header = require "request_header"
+
+local edit_header_table = {
+    cookie="cookie_test", 
+    test1="test1", 
+    test_2="test_2", 
+    test3={"test3_1", "test3_2"}
+}
+local set_result = request_header.set_header(edit_header_table, true)
+local result = ngx.location.capture("/common/request_header/demo/capture")
+ngx.say(set_result)
+ngx.say(result.body)
+```
+
+```text
+true
+key:host value:localhost:8888
+key:connection value:keep-alive
+key:sec-fetch-site value:cross-site
+key:accept value:*/*
+key:accept-language value:zh-CN,zh;q=0.9
+key:test_2 value:test_2
+key:accept-encoding value:gzip, deflate, br
+key:user-agent value:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36
+key:test1 value:test1
+key:cookie value:cookie_test
+key:test3 value:test3_1,test3_2
+key:sec-fetch-mode value:cors
+```
+
 [Back to TOC](#table-of-contents)
 
 response_result
@@ -580,6 +672,63 @@ end
 下标3的值:3
 下标4的值:4
 下标5的值:5
+```
+
+**判断table是否是数组**
+
+```lua
+local common_uitl = require "common_util"
+
+local source_array = {"1", "2", "3", "4", "4", "5", "5"}
+local source_not_array = {"1", filed_1="属性1", filed_2="属性2"}
+local source_yet_array = {
+    "1", 
+    "2", 
+    {filed_1="属性1", filed_2="属性2", filed_3="属性3"}
+}
+local source_object = {filed_1="属性1", filed_2="属性2", filed_3="属性3"}
+local source_object_array = {
+    {filed_1="属性1", filed_2="属性2", filed_3="属性3"},
+    {filed_1="属性1", filed_2="属性2", filed_3="属性3"},
+    {filed_1="属性1", filed_2="属性2", filed_3="属性3"}
+}
+ngx.say(common_uitl.is_array(source_array))
+ngx.say(common_uitl.is_array(source_not_array))
+ngx.say(common_uitl.is_array(source_yet_array))
+ngx.say(common_uitl.is_array(source_object))
+ngx.say(common_uitl.is_array(source_object_array))
+```
+
+```text
+true
+false
+true
+false
+true
+```
+
+**table为对象时，将对象的属性和值分离成两个单独的数组**
+
+```lua
+local common_uitl = require "common_util"
+
+local object = {filed_1="属性1", filed_2="属性2", filed_3="属性3"}
+local k_array, v_array = common_uitl.kv_separate(object)
+for i, v in ipairs(k_array) do
+    ngx.say("分离出的k:" .. v)
+end
+for i, v in ipairs(v_array) do
+    ngx.say("分离出的v:" .. v)
+end
+```
+
+```text
+分离出的k:filed_3
+分离出的k:filed_1
+分离出的k:filed_2
+分离出的v:属性3
+分离出的v:属性1
+分离出的v:属性2
 ```
 
 [Back to TOC](#table-of-contents)
