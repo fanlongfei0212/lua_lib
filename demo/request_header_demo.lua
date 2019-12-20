@@ -5,9 +5,9 @@ local function get_header_all()
     if result then
         for k, v in pairs(result) do
             if type(v) == "table" then
-                ngx.say("key:" .. k .. " value:" .. table.concat( v, "," ))
+                ngx.say(k .. ":" .. table.concat( v, "," ))
             else
-                ngx.say("key:" .. k .. " value:" .. v)
+                ngx.say(k .. ":" .. v)
             end
         end
     end
@@ -21,9 +21,9 @@ local function get_header()
     if result then
         for k, v in pairs(result) do
             if type(v) == "table" then
-                ngx.say("key:" .. k .. " value:" .. table.concat( v, "," ))
+                ngx.say(k .. ":" .. table.concat( v, "," ))
             else
-                ngx.say("key:" .. k .. " value:" .. v)
+                ngx.say(k .. ":" .. v)
             end
         end
     end

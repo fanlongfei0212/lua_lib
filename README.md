@@ -383,21 +383,25 @@ local request_header = require "request_header"
 local result = request_header.get_header_all()
 if result then
     for k, v in pairs(result) do
-        ngx.say("key:" .. k .. " value:" .. v)
+        if type(v) == "table" then
+            ngx.say(k .. ":" .. table.concat( v, "," ))
+        else
+            ngx.say(k .. ":" .. v)
+        end
     end
 end
 ```
 
 ```text
-key:host value:localhost:8888
-key:connection value:keep-alive
-key:sec-fetch-site value:cross-site
-key:sec-fetch-mode value:cors
-key:accept-encoding value:gzip, deflate, br
-key:user-agent value:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36
-key:accept value:*/*
-key:cookie value:_ga=GA1.1.515272813.1557485115; JSESSIONID=B2EB55361EDCBE1F179AE702D4900548
-key:accept-language value:zh-CN,zh;q=0.9
+host:localhost:8888
+connection:keep-alive
+sec-fetch-site:cross-site
+sec-fetch-mode:cors
+accept-encoding:gzip, deflate, br
+user-agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36
+accept:*/*
+cookie:_ga=GA1.1.515272813.1557485115; JSESSIONID=B3A27B8FB81DA40A0773EAAD67ABC35E
+accept-language:zh-CN,zh;q=0.9
 ```
 
 **获取请求头中指定的值**
@@ -418,7 +422,11 @@ local args = {"text1", "text2"}
 local result = request_header.get_header(args)
 if result then
     for k, v in pairs(result) do
-        ngx.say("key:" .. k .. " value:" .. v)
+        if type(v) == "table" then
+            ngx.say(k .. ":" .. table.concat( v, "," ))
+        else
+            ngx.say(k .. ":" .. v)
+        end
     end
 end
 ```
@@ -439,15 +447,19 @@ key:text2 value:2
 * 原始请求头中数据:
 
 ```text
-key:host value:localhost:8888
-key:connection value:keep-alive
-key:sec-fetch-site value:cross-site
-key:sec-fetch-mode value:cors
-key:accept-encoding value:gzip, deflate, br
-key:user-agent value:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36
-key:accept value:*/*
-key:cookie value:_ga=GA1.1.515272813.1557485115; JSESSIONID=B3A27B8FB81DA40A0773EAAD67ABC35E
-key:accept-language value:zh-CN,zh;q=0.9
+true
+host:localhost:8888
+connection:keep-alive
+sec-fetch-site:cross-site
+accept:*/*
+accept-language:zh-CN,zh;q=0.9
+test_2:test_2
+accept-encoding:gzip, deflate, br
+user-agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36
+test1:test1
+cookie:_ga=GA1.1.515272813.1557485115; JSESSIONID=B3A27B8FB81DA40A0773EAAD67ABC35E
+test3:test3_1,test3_2
+sec-fetch-mode:cors
 ```
 
 * 设置请求头与原请求头中出现相同时不替换相同的内容
@@ -471,18 +483,18 @@ ngx.say(result.body)
 
 ```text
 true
-key:host value:localhost:8888
-key:connection value:keep-alive
-key:sec-fetch-site value:cross-site
-key:accept value:*/*
-key:accept-language value:zh-CN,zh;q=0.9
-key:test_2 value:test_2
-key:accept-encoding value:gzip, deflate, br
-key:user-agent value:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36
-key:test1 value:test1
-key:cookie value:_ga=GA1.1.515272813.1557485115; JSESSIONID=B3A27B8FB81DA40A0773EAAD67ABC35E
-key:test3 value:test3_1,test3_2
-key:sec-fetch-mode value:cors
+host:localhost:8888
+connection:keep-alive
+sec-fetch-site:cross-site
+accept:*/*
+accept-language:zh-CN,zh;q=0.9
+test_2:test_2
+accept-encoding:gzip, deflate, br
+user-agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36
+test1:test1
+cookie:cookie_test
+test3:test3_1,test3_2
+sec-fetch-mode:cors
 ```
 
 * 设置请求头与原请求头中出现相同时替换相同的内容
