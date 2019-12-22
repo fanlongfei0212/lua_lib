@@ -532,6 +532,45 @@ key:test3 value:test3_1,test3_2
 key:sec-fetch-mode value:cors
 ```
 
+**清除请求头中的值**
+
+* 假设原请求头
+
+```text
+host:localhost:8888
+connection:keep-alive
+sec-fetch-site:cross-site
+sec-fetch-mode:cors
+accept-encoding:gzip, deflate, br
+user-agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36
+accept:*/*
+cookie:_ga=GA1.1.515272813.1557485115; JSESSIONID=B3A27B8FB81DA40A0773EAAD67ABC35E
+accept-language:zh-CN,zh;q=0.9
+```
+
+调用的子请求(**ngx.location.capture("/common/request_header/demo/capture")**)中的操作就是获取所有的请求头内容，以此验证清除请求头是否成功
+
+```lua
+local request_header = require "request_header"
+
+local header = {"connection", "host"}
+local clear_result = request_header.clear_header(header)
+local result = ngx.location.capture("/common/request_header/demo/capture")
+ngx.say(clear_result)
+ngx.say(result.body)
+```
+
+```text
+true
+sec-fetch-mode:cors
+accept-encoding:gzip, deflate, br
+user-agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36
+accept:*/*
+accept-language:zh-CN,zh;q=0.9
+sec-fetch-site:cross-site
+cookie:_ga=GA1.1.515272813.1557485115; JSESSIONID=B3A27B8FB81DA40A0773EAAD67ABC35E
+```
+
 [Back to TOC](#table-of-contents)
 
 response_result

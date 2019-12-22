@@ -88,4 +88,17 @@ function req_header.set_header(args, is_replace)
     return true
 end
 
+--清除header中的值
+--入参:table要设置参数名称以及对应值的table(table是数组，不能是对象)
+--返回:boolean,true-->成功 false-->失败
+function req_header.clear_header(data)
+    if not data or type(data) ~= "table" or (type(data) == "table" and not common_util.is_array(data) or not next(data)) then
+        return false
+    end
+    for i, v in ipairs(data) do
+        ngx.req.clear_header(v)
+    end
+    return true
+end
+
 return req_header

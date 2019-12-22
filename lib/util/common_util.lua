@@ -57,7 +57,9 @@ function common_util.distinct(array)
     return result
 end
 
---判断table是数组还是对象
+--判断table是否是数组
+--入参:要验证的table
+--返回:数组->true 非数组->false
 function common_util.is_array(data)
     if not data or type(data) ~= "table" or not next(data) then
         return false
