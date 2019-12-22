@@ -432,8 +432,8 @@ end
 ```
 
 ```text
-key:text1 value:1
-key:text2 value:2
+text1:1
+text2:2
 ```
 
 **添加请求头**
