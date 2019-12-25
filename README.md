@@ -377,13 +377,13 @@ request_header
 
 ### 概要
 
-* lua_package_path:
+lua_package_path:
 
 ```text
 lua_package_path "/path/to/lua_lib/lib/util/?.lua;;";
 ```
 
-* 依赖:*此类库依赖本项目中**common_util.lua**类库，如果只需要使用request_header.lua类库，也需要把**common_util.lua**和**request_header.lua**同时加入到lua_package_path中才能使用*
+依赖:*此类库依赖本项目中**common_util.lua**类库，如果只需要使用request_header.lua类库，也需要把**common_util.lua**和**request_header.lua**同时加入到lua_package_path中才能使用*
 
 **获取请求头中所有的值**
 
