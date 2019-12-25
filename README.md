@@ -16,6 +16,7 @@ Table of Contents
 * [MyLualib](#MyLualib)
     * [request_args](#request_args)
     * [request_header](#request_header)
+    * [request_cookie](#request_cookie)
     * [response_result](#response_result)
     * [common_uitl](#common_util)
 * [Components](#Components)
@@ -24,6 +25,7 @@ Table of Contents
 * [Lualib](#Lualib)
     * [dkjson](#dkjson)
     * [rsa](#rsa)
+    * [lua-resty-cookie](#lua-resty-cookie)
 
 MyLuaInterface
 ========
@@ -573,6 +575,120 @@ cookie:_ga=GA1.1.515272813.1557485115; JSESSIONID=B3A27B8FB81DA40A0773EAAD67ABC3
 
 [Back to TOC](#table-of-contents)
 
+request_cookie
+---------------
+
+**获取全部cookie**
+
+* 假设请求url:http://localhost:8888/common/request_cookie/demo
+
+* 全部cookie:
+
+```text
+_ga:GA1.1.515272813.1557485115
+JSESSIONID:B3A27B8FB81DA40A0773EAAD67ABC35E
+```
+
+```lua
+local request_cookie = require "request_cookie"
+
+local result = request_cookie.get_all()
+if result then
+    for k, v in pairs(result) do
+        ngx.say(k .. ":" .. v)
+    end
+end
+```
+
+```text
+_ga:GA1.1.515272813.1557485115
+JSESSIONID:B3A27B8FB81DA40A0773EAAD67ABC35E
+```
+
+**获取指定的多个cookie**
+
+* 假设请求url:http://localhost:8888/common/request_cookie/demo
+
+* 全部cookie:
+
+```text
+_ga:GA1.1.515272813.1557485115
+JSESSIONID:B3A27B8FB81DA40A0773EAAD67ABC35E
+```
+
+```lua
+local request_cookie = require "request_cookie"
+
+local names = {"_ga", "JSESSIONID"}
+local result = request_cookie.get_cookies(names)
+if result then
+    for k, v in pairs(result) do
+        ngx.say(k .. ":" .. v)
+    end
+end
+```
+
+```text
+_ga:GA1.1.515272813.1557485115
+JSESSIONID:B3A27B8FB81DA40A0773EAAD67ABC35E
+```
+
+**获取单个cookie**
+
+* 假设请求url:http://localhost:8888/common/request_cookie/demo
+
+* 全部cookie:
+
+```text
+_ga:GA1.1.515272813.1557485115
+JSESSIONID:B3A27B8FB81DA40A0773EAAD67ABC35E
+```
+
+```lua
+local request_cookie = require "request_cookie"
+
+local cookie = request_cookie.get_cookie("_ga")
+ngx.say(cookie)
+```
+
+```text
+_ga:GA1.1.515272813.1557485115
+```
+
+**设置cookie**
+
+* 假设请求url:http://localhost:8888/common/request_cookie_edit/demo
+
+```lua
+local request_cookie = require "request_cookie"
+
+local cookie = {
+    key = "Name",
+    value = "Bob",
+    path = "/",
+    domain = "localhost",
+    secure = true, httponly = true,
+    expires = "Wed, 09 Jun 2021 10:18:14 GMT",
+    max_age = 50,
+    samesite = "Strict",
+    extension = "a4334aebaec"
+}
+local set_result = request_cookie.set_cookie(cookie)
+ngx.say(set_result)
+```
+
+```text
+true
+```
+
+* 设置cookie成功后会在Response Headers中添加Set-Cookie响应头信息
+
+```text
+Set-Cookie: Name=Bob; Expires=Wed, 09 Jun 2021 10:18:14 GMT; Max-Age=50; Domain=localhost; Path=/; Secure; HttpOnly; a4334aebaec
+```
+
+[Back to TOC](#table-of-contents)
+
 response_result
 ---------------
 
@@ -827,5 +943,14 @@ rsa
 **[官方文献](https://github.com/spacewander/lua-resty-rsa)**
 
 主要作用:生成rea公钥、私钥对,用于对数据的rsa加密以及解密,详细信息可查阅官方文献
+
+[Back to TOC](#table-of-contents)
+
+lua-resty-cookie
+----------------
+
+**[官方文献](https://github.com/cloudflare/lua-resty-cookie)**
+
+主要作用:对Cookie的操作，获取、设置等
 
 [Back to TOC](#table-of-contents)
