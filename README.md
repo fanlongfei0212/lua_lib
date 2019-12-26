@@ -57,7 +57,7 @@ lua_package_path "/path/to/lua_lib/lib/json/?.lua;;";
 
 ```conf
 location /rsa/json/keyPair {
-    content_by_lua_file json_key_pair.lua;
+    content_by_lua_file /path/to/json_key_pair.lua;
 }
 ```
 
@@ -105,7 +105,7 @@ ngx.exit(ngx.OK)
 
 ```conf
 location /rsa/text/keyPair {
-    content_by_lua_file text_key_pair.lua;
+    content_by_lua_file /path/to/text_key_pair.lua;
 }
 ```
 
