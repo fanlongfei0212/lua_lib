@@ -317,7 +317,7 @@ request_args
 
 ### 概要
 
-**request_args用于获取url、body中的请求参数**
+request_args用于获取url、body中的请求参数
 
 lua_package_path:
 
@@ -406,7 +406,7 @@ request_header
 
 ### 概要
 
-**request_header用于针对请求头的获取、修改、清除**
+request_header用于针对请求头的获取、修改、清除
 
 lua_package_path:
 
@@ -623,7 +623,7 @@ request_cookie
 
 ### 概要
 
-**request_cookie用于对cookie的读写操作**
+request_cookie用于对cookie的读写操作
 
 lua_package_path:
 
@@ -752,7 +752,7 @@ response_result
 
 ### 概要
 
-**response_result用于对响应体的格式封装**
+response_result用于对响应体的格式封装
 
 lua_package_path:
 
@@ -838,7 +838,7 @@ common_util
 
 ### 概要
 
-**common_util用于一些常用的基础操作，比如字符串分割、数组去重等等...**
+common_util用于一些常用的基础操作，比如字符串分割、数组去重等等...
 
 lua_package_path:
 
