@@ -332,6 +332,8 @@ lua_package_path "/path/to/lua_lib/lib/json/?.lua;;";
 
 **获取请求中url参数值**
 
+Method:get_args_by_name(arg_names)
+
 * 假设请求url:http://localhost:8888/request/args/demo?parameter1=参数1的值&parameter2=参数2的值
 
 ```lua
@@ -351,6 +353,8 @@ get请求中参数-->parameter2的值:参数2的值
 ```
 
 **获取请求中body参数值(form表单)**
+
+Method:post_args_by_name(arg_names)
 
 * 假设请求url:http://localhost:8888/request/args/demo
 
@@ -373,6 +377,8 @@ post请求中参数-->parameter2的值:参数2的值
 ```
 
 **获取请求中body参数值(json格式)**
+
+Method:json_args_by_name()
 
 * 假设请求url:http://localhost:8888/request/args/demo
 
@@ -420,6 +426,8 @@ lua_package_path "/path/to/lua_lib/lib/util/?.lua;;";
 
 **获取请求头中所有的值**
 
+Method:get_header_all()
+
 * 假设请求url:http://localhost:8888/common/request_header/demo
 
 ```lua
@@ -450,6 +458,8 @@ accept-language:zh-CN,zh;q=0.9
 ```
 
 **获取请求头中指定的值**
+
+Method:get_header(arg_table)
 
 * 假设请求url:http://localhost:8888/common/request_header/demo
 
@@ -482,6 +492,8 @@ text2:2
 ```
 
 **添加请求头**
+
+Method:set_header(args, is_replace)
 
 在nginx接收到请求之后，需要进行调用子请求并且需要添加请求头让子请求可以获取到时使用，可以同时设置多个；并且在设置请求头时如果设置的请求头中包含原请求头中已经存在的值，可以选择进行替换或者不替换，替换则将相同的请求头内容进行更新，不替换则保留相同请求头中之前的内容；成功返回ture，失败返回false
 
@@ -579,6 +591,8 @@ key:sec-fetch-mode value:cors
 
 **清除请求头中的值**
 
+Method:clear_header(data)
+
 * 假设原请求头
 
 ```text
@@ -638,6 +652,8 @@ lua_package_path "/path/to/lua_lib/lib/cookie/?.lua;;";
 
 **获取全部cookie**
 
+Method:get_all()
+
 * 假设请求url:http://localhost:8888/common/request_cookie/demo
 
 * 全部cookie:
@@ -664,6 +680,8 @@ JSESSIONID:B3A27B8FB81DA40A0773EAAD67ABC35E
 ```
 
 **获取指定的多个cookie**
+
+Method:get_cookies(cookie_names)
 
 * 假设请求url:http://localhost:8888/common/request_cookie/demo
 
@@ -693,6 +711,8 @@ JSESSIONID:B3A27B8FB81DA40A0773EAAD67ABC35E
 
 **获取单个cookie**
 
+Method:get_cookie(cookie_name)
+
 * 假设请求url:http://localhost:8888/common/request_cookie/demo
 
 * 全部cookie:
@@ -714,6 +734,8 @@ _ga:GA1.1.515272813.1557485115
 ```
 
 **设置cookie**
+
+Method:set_cookie(cookie_data)
 
 * 假设请求url:http://localhost:8888/common/request_cookie_edit/demo
 
@@ -767,6 +789,8 @@ lua_package_path "/path/to/lua_lib/lib/json/?.lua;;";
 
 **将返回数据封装指定的json格式，并且支持jsonp**
 
+Method:success(data, code, message)
+
 * 请求成功无返回数据
 
 ```lua
@@ -781,6 +805,8 @@ ngx.say(response_result.success())
 
 * 请求成功返回数据
 
+Method:success(data, code, message)
+
 ```lua
 local response_result = require "response_result"
 
@@ -794,6 +820,8 @@ ngx.say(response_result.success(data, nil, nil))
 
 * 请求失败默认格式
 
+Method:error(code, message)
+
 ```lua
 local response_result = require "response_result"
 
@@ -806,6 +834,8 @@ ngx.say(response_result.error())
 
 * 请求失败指定编码以及描述
 
+Method:error(code, message)
+
 ```lua
 local response_result = require "response_result"
 
@@ -817,6 +847,9 @@ ngx.say(response_result.error("sys_001", "查询出错"))
 ```
 
 * jsonp
+
+Method:jsonp_success(data, code, message, callback)
+Method:jsonp_error(code, message, callback)
 
 ```lua
 local response_result = require "response_result"
