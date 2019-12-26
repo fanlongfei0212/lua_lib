@@ -301,6 +301,16 @@ MyLualib
 request_args
 ------------
 
+### 概要
+
+lua_package_path:
+
+```text
+lua_package_path "/path/to/lua_lib/lib/util/?.lua;;";
+```
+
+如果只需要使用**request_args.lua**类库，需要把**request_args.lua**加入到lua_package_path中才能使用
+
 **获取请求中url参数值**
 
 * 假设请求url:http://localhost:8888/request/args/demo?parameter1=参数1的值&parameter2=参数2的值
@@ -588,6 +598,17 @@ cookie:_ga=GA1.1.515272813.1557485115; JSESSIONID=B3A27B8FB81DA40A0773EAAD67ABC3
 request_cookie
 ---------------
 
+### 概要
+
+lua_package_path:
+
+```text
+lua_package_path "/path/to/lua_lib/lib/util/?.lua;;";
+lua_package_path "/path/to/lua_lib/lib/cookie/?.lua;;";
+```
+
+此类库依赖本项目中**common_util.lua**类库以及第三方的**lua-resty-cookie**（在本项目中的**lib/cookie**中），如果只需要使用**request_cookie.lua**类库，也需要把**common_util.lua**以及**cookie.lua**和**request_cookie.lua**同时加入到lua_package_path中才能使用
+
 **获取全部cookie**
 
 * 假设请求url:http://localhost:8888/common/request_cookie/demo
@@ -702,6 +723,16 @@ Set-Cookie: Name=Bob; Expires=Wed, 09 Jun 2021 10:18:14 GMT; Max-Age=50; Domain=
 response_result
 ---------------
 
+### 概要
+
+lua_package_path:
+
+```text
+lua_package_path "/path/to/lua_lib/lib/util/?.lua;;";
+```
+
+如果只需要使用**response_result.lua**类库，需要把**response_result.lua**加入到lua_package_path中才能使用
+
 **将返回数据封装指定的json格式，并且支持jsonp**
 
 * 请求成功无返回数据
@@ -772,6 +803,16 @@ callback({"message":"查询出错","code":"sys_001"})
 
 common_util
 -----------
+
+### 概要
+
+lua_package_path:
+
+```text
+lua_package_path "/path/to/lua_lib/lib/util/?.lua;;";
+```
+
+如果只需要使用**common_util.lua**类库，需要把**common_util.lua**加入到lua_package_path中才能使用
 
 **判断数组中是否包含某个值**
 
