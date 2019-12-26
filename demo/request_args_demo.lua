@@ -1,6 +1,6 @@
 local request_args = require "request_args"
 
---执行demo时，测试其中一个函数时，需要把其他函数注释掉
+--执行demo时，测试其中一个函数时，需要把其他函数调用注释掉
 
 -- 获取请求url参数
 local function request_get_args()

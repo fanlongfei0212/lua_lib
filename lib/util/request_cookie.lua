@@ -34,7 +34,7 @@ end
 
 --批量获取指定的cookie
 --入参:要获取的cookie名称table数组
---返回:cookie名称以及对应值的table对象，如果某些cookie不存在，则对应的值为nil
+--返回:cookie名称以及对应值的table对象
 function request_cookie.get_cookies(cookie_names)
     local result = nil
     if not cookie_names or type(cookie_names) ~= "table" or not common_util.is_array(cookie_names) or not next(cookie_names) then
@@ -56,7 +56,7 @@ function request_cookie.get_cookies(cookie_names)
 end
 
 --单个获取指定的cookie
---入参:要获取的cookie名称table数组
+--入参:要获取的cookie名称
 --返回:cookie名称以及对应值的table对象，如果某些cookie不存在，则对应的值为nil
 function request_cookie.get_cookie(cookie_name)
     if not cookie_name then

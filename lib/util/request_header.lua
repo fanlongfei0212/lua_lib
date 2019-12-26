@@ -55,7 +55,7 @@ function req_header.get_header(arg_table)
 end
 
 --设置header中的值
---入参:要设置参数名称以及对应值的table(table为对象,属性的值也可以是数组,但不能是对象);如果请求头中存在相同的值参数,是否进行值替换(true-->替换 false-->保留原值)
+--入参:要设置参数名称以及对应值的table(table为对象,属性的值可以是数组,但不能是对象);如果请求头中存在相同的值参数,是否进行值替换(true-->替换 false-->保留原值)
 --返回:boolean,true-->成功 false-->失败
 function req_header.set_header(args, is_replace)
     if not is_replace or type(is_replace) ~= "boolean" then

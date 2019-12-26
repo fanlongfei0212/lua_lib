@@ -1,3 +1,4 @@
+local common_util = require "common_util"
 local dkjson = require "dkjson"
 local request_args = {}
 
@@ -33,7 +34,7 @@ function request_args.post_args_by_name(arg_names)
     ngx.req.read_body()
     local args, err = ngx.req.get_post_args()
     local result = {}
-    if args then
+    if args and arg_names and type(arg_names) == "table" and common_util.is_array(arg_names) and next(arg_names) then
         for i, filed in ipairs(arg_names) do
             for k, v in pairs(args) do
                 if k == filed then
@@ -64,7 +65,7 @@ function request_args.json_args_by_name()
             result = dkjson.decode(json)
         end
     end
-    if not next(result) then
+    if not result or not next(result) then
         result = nil
     end
     return result
