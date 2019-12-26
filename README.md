@@ -340,6 +340,8 @@ lua_package_path "/path/to/lua_lib/lib/json/?.lua;;";
 | :------: | :------: | :------: | :------: | :------: |
 | arg_names | table | 是 | 要获取的参数名称的数组table | 必须是数组table，不可以是对象table |
 
+示例:
+
 * 假设请求url:http://localhost:8888/request/args/demo?parameter1=参数1的值&parameter2=参数2的值
 
 ```lua
@@ -368,6 +370,8 @@ get请求中参数-->parameter2的值:参数2的值
 | :------: | :------: | :------: | :------: | :------: |
 | arg_names | table | 是 | 要获取的参数名称的数组table | 必须是数组table，不可以是对象table |
 
+示例:
+
 * 假设请求url:http://localhost:8888/request/args/demo
 
 * 参数传递方式:parameter1=参数1的值&parameter2=参数2的值(form表单)
@@ -393,6 +397,8 @@ post请求中参数-->parameter2的值:参数2的值
 调用函数:json_args_by_name()
 
 参数列表:无
+
+示例:
 
 * 假设请求url:http://localhost:8888/request/args/demo
 
@@ -444,6 +450,8 @@ lua_package_path "/path/to/lua_lib/lib/util/?.lua;;";
 
 参数列表:无
 
+示例:
+
 * 假设请求url:http://localhost:8888/common/request_header/demo
 
 ```lua
@@ -482,6 +490,8 @@ accept-language:zh-CN,zh;q=0.9
 | 参数 | 参数类型 | 是否必传 | 描述 | 备注 |
 | :------: | :------: | :------: | :------: | :------: |
 | arg_table | table | 是 | 要获取的请求头名称的数组table | 必须是字符串数组table，不可以是对象table |
+
+示例:
 
 * 假设请求url:http://localhost:8888/common/request_header/demo
 
@@ -523,6 +533,8 @@ text2:2
 | :------: | :------: | :------: | :------: | :------: |
 | args | table | 是 | 要添加的请求头名称以及所对应值的对象table | 必须是对象table，属性的值可以是数组，但不能是对象 |
 | is_replace | boolean | 否 | 如果请求头中存在相同的值参数,是否进行值替换(true-->替换 false-->保留原值) | 不传或传nil以及非boolean参数则默认为false |
+
+示例:
 
 在nginx接收到请求之后，需要进行调用子请求并且需要添加请求头让子请求可以获取到时使用，可以同时设置多个；并且在设置请求头时如果设置的请求头中包含原请求头中已经存在的值，可以选择进行替换或者不替换，替换则将相同的请求头内容进行更新，不替换则保留相同请求头中之前的内容；成功返回ture，失败返回false
 
@@ -628,6 +640,8 @@ key:sec-fetch-mode value:cors
 | :------: | :------: | :------: | :------: | :------: |
 | data | table | 是 | 要清除的多个cookie的名称数组 | 数组table，不能是对象 |
 
+示例:
+
 * 假设原请求头
 
 ```text
@@ -691,6 +705,8 @@ lua_package_path "/path/to/lua_lib/lib/cookie/?.lua;;";
 
 参数列表:无
 
+示例:
+
 * 假设请求url:http://localhost:8888/common/request_cookie/demo
 
 * 全部cookie:
@@ -725,6 +741,8 @@ JSESSIONID:B3A27B8FB81DA40A0773EAAD67ABC35E
 | 参数 | 参数类型 | 是否必传 | 描述 | 备注 |
 | :------: | :------: | :------: | :------: | :------: |
 | cookie_names | table | 是 | 要获取的多个cookie的名称数组 | 数组table，不能是对象 |
+
+示例:
 
 * 假设请求url:http://localhost:8888/common/request_cookie/demo
 
@@ -762,6 +780,8 @@ JSESSIONID:B3A27B8FB81DA40A0773EAAD67ABC35E
 | :------: | :------: | :------: | :------: | :------: |
 | cookie_name | string | 是 | 要获取的cookie名称 | 无 |
 
+示例:
+
 * 假设请求url:http://localhost:8888/common/request_cookie/demo
 
 * 全部cookie:
@@ -791,6 +811,8 @@ _ga:GA1.1.515272813.1557485115
 | 参数 | 参数类型 | 是否必传 | 描述 | 备注 |
 | :------: | :------: | :------: | :------: | :------: |
 | cookie_data | table | 是 | 对象table | 由于依赖于第三方类库**lua-resty-cookie**，参数与**lua-resty-cookie**中设置cookie的参数一致，详情请查阅**lua-resty-cookie**官方文献，本文提供官方地址，在目录**Lualib**中查找 |
+
+示例:
 
 * 假设请求url:http://localhost:8888/common/request_cookie_edit/demo
 
@@ -854,6 +876,8 @@ lua_package_path "/path/to/lua_lib/lib/json/?.lua;;";
 | code | string 或 number | 否 | 请求成功的响应code码 | 如果不传或传入nil默认为 0 |
 | message | string | 否 | 请求成功后响应的描述 | 如果不传或传入nil默认为 success |
 
+示例:
+
 * 请求成功无返回数据
 
 ```lua
@@ -889,6 +913,8 @@ ngx.say(response_result.success(data, nil, nil))
 | :------: | :------: | :------: | :------: | :------: |
 | code | string 或 number | 否 | 请求失败的响应code码 | 如果不传或传入nil默认为 500 |
 | message | string | 否 | 请求失败后响应的描述 | 如果不传或传入nil默认为 系统异常 |
+
+示例:
 
 ```lua
 local response_result = require "response_result"
@@ -935,6 +961,8 @@ ngx.say(response_result.error("sys_001", "查询出错"))
 | message | string | 否 | 请求失败后响应的描述 | 如果不传或传入nil默认为 系统异常 |
 | callback | string | 否 | 回调函数名称 | 如果不传或传入nil默认为 非jsonp，按照非jsonp请求失败的响应格式进行返回 |
 
+示例:
+
 ```lua
 local response_result = require "response_result"
 
@@ -978,6 +1006,8 @@ lua_package_path "/path/to/lua_lib/lib/util/?.lua;;";
 | array | table | 是 | 源数组table，不能是对象table； | 只限string数组、或number数组 |
 | arg | string or number | 是 | 是否包含在数组中的目标值 | 无 |
 
+示例:
+
 ```lua
 local common_uitl = require "common_util"
 
@@ -1005,6 +1035,8 @@ false
 | array | table | 是 | 源数组table，不能是对象table | 只限string数组、或number数组 |
 | args | table | 是 | 目标数组table，不能是对象table | 只限string数组、或number数组 |
 
+示例:
+
 ```lua
 local common_uitl = require "common_util"
 
@@ -1031,6 +1063,8 @@ false
 | :------: | :------: | :------: | :------: | :------: |
 | source | string | 是 | 需要被分割的字符串 | 无 |
 | str | string | 是 | 分隔符字符串 | 无 |
+
+示例:
 
 ```lua
 local common_uitl = require "common_util"
@@ -1062,6 +1096,8 @@ end
 | :------: | :------: | :------: | :------: | :------: |
 | array | table | 是 | 要去重的数组 | 数组table，不能是对象table，只限string数组、或number数组 |
 
+示例:
+
 ```lua
 local common_uitl = require "common_util"
 
@@ -1089,6 +1125,8 @@ end
 | 参数 | 参数类型 | 是否必传 | 描述 | 备注 |
 | :------: | :------: | :------: | :------: | :------: |
 | data | table | 是 | 要检测的table | 无 |
+
+示例:
 
 ```lua
 local common_uitl = require "common_util"
@@ -1130,6 +1168,8 @@ true
 | 参数 | 参数类型 | 是否必传 | 描述 | 备注 |
 | :------: | :------: | :------: | :------: | :------: |
 | data | table | 是 | 要做键值分离的对象table | 对象的属性值只能输number或string |
+
+示例:
 
 ```lua
 local common_uitl = require "common_util"
