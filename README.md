@@ -326,6 +326,8 @@ lua_package_path "/path/to/lua_lib/lib/json/?.lua;;";
 
 此类库依赖第三方的**dkjson**（在本项目中的lib/json中），如果只需要使用**request_args.lua**类库，也需要把**dkjson.lua**和**request_args.lua**同时加入到lua_package_path中才能使用
 
+---
+
 **获取请求中url参数值**
 
 * 假设请求url:http://localhost:8888/request/args/demo?parameter1=参数1的值&parameter2=参数2的值
