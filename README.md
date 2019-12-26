@@ -35,6 +35,18 @@ MyLuaInterface
 基于rsa的秘钥对签发接口
 -------------------
 
+### 概要
+
+lua_package_path:
+
+```text
+lua_package_path "/path/to/lua_lib/lib/rsa/?.lua;;";
+lua_package_path "/path/to/lua_lib/lib/util/?.lua;;";
+lua_package_path "/path/to/lua_lib/lib/json/?.lua;;";
+```
+
+此lua接口依赖本项目中**response_result.lua**类库以及第三方的**lua-resty-rsa**（在本项目中的lib/rsa中）、**dkjson**（在本项目中的lib/json中），需要把**response_result.lua**和**rsa.lua**、**dkjson.lua**同时加入到lua_package_path中才能使用
+
 **json_key_pair.lua接口:rsa秘钥对签发（返回值为json格式）,秘钥对签发使用PKCS8格式**
 
 该接口引用了rsa.lua以及response_result.lua，进行随机rsa秘钥对的签发，可以直接作为接口在OpenResty中进行location配置调用
@@ -213,7 +225,7 @@ drNLRsBmwYGgBK0pKVgl/fE/998=
 
 ```java
 public static void main(String[] args) throws Exception {
-    Map<String, String> map = RsaUtil.getKeyPairMap(RsaUtil.getKeyPair());
+    Map<String, String> map = new HashMap<>();
     map.put("public",
             "-----BEGIN PUBLIC KEY-----\n" +
             "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA26+HZF10FkQfkYAClmzE\n" +
@@ -307,9 +319,10 @@ lua_package_path:
 
 ```text
 lua_package_path "/path/to/lua_lib/lib/util/?.lua;;";
+lua_package_path "/path/to/lua_lib/lib/json/?.lua;;";
 ```
 
-如果只需要使用**request_args.lua**类库，需要把**request_args.lua**加入到lua_package_path中才能使用
+此类库依赖第三方的**dkjson**（在本项目中的lib/json中），如果只需要使用**request_args.lua**类库，也需要把**dkjson.lua**和**request_args.lua**同时加入到lua_package_path中才能使用
 
 **获取请求中url参数值**
 
@@ -729,9 +742,10 @@ lua_package_path:
 
 ```text
 lua_package_path "/path/to/lua_lib/lib/util/?.lua;;";
+lua_package_path "/path/to/lua_lib/lib/json/?.lua;;";
 ```
 
-如果只需要使用**response_result.lua**类库，需要把**response_result.lua**加入到lua_package_path中才能使用
+此类库依赖第三方的**dkjson**（在本项目中的lib/json中）如果只需要使用**response_result.lua**类库，也需要把**response_result.lua**和**dkjson.lua**加入到lua_package_path中才能使用
 
 **将返回数据封装指定的json格式，并且支持jsonp**
 
