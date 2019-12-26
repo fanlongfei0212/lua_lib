@@ -47,6 +47,8 @@ lua_package_path "/path/to/lua_lib/lib/json/?.lua;;";
 
 此lua接口依赖本项目中**response_result.lua**类库以及第三方的**lua-resty-rsa**（在本项目中的lib/rsa中）、**dkjson**（在本项目中的lib/json中），需要把**response_result.lua**和**rsa.lua**、**dkjson.lua**同时加入到lua_package_path中才能使用
 
+---
+
 **json_key_pair.lua接口:rsa秘钥对签发（返回值为json格式）,秘钥对签发使用PKCS8格式**
 
 该接口引用了rsa.lua以及response_result.lua，进行随机rsa秘钥对的签发，可以直接作为接口在OpenResty中进行location配置调用
@@ -408,6 +410,8 @@ lua_package_path "/path/to/lua_lib/lib/util/?.lua;;";
 
 此类库依赖本项目中**common_util.lua**类库，如果只需要使用**request_header.lua**类库，也需要把**common_util.lua**和**request_header.lua**同时加入到lua_package_path中才能使用
 
+---
+
 **获取请求头中所有的值**
 
 * 假设请求url:http://localhost:8888/common/request_header/demo
@@ -622,6 +626,8 @@ lua_package_path "/path/to/lua_lib/lib/cookie/?.lua;;";
 
 此类库依赖本项目中**common_util.lua**类库以及第三方的**lua-resty-cookie**（在本项目中的**lib/cookie**中），如果只需要使用**request_cookie.lua**类库，也需要把**common_util.lua**以及**cookie.lua**和**request_cookie.lua**同时加入到lua_package_path中才能使用
 
+---
+
 **获取全部cookie**
 
 * 假设请求url:http://localhost:8888/common/request_cookie/demo
@@ -747,6 +753,8 @@ lua_package_path "/path/to/lua_lib/lib/json/?.lua;;";
 
 此类库依赖第三方的**dkjson**（在本项目中的lib/json中）如果只需要使用**response_result.lua**类库，也需要把**response_result.lua**和**dkjson.lua**加入到lua_package_path中才能使用
 
+---
+
 **将返回数据封装指定的json格式，并且支持jsonp**
 
 * 请求成功无返回数据
@@ -827,6 +835,8 @@ lua_package_path "/path/to/lua_lib/lib/util/?.lua;;";
 ```
 
 如果只需要使用**common_util.lua**类库，需要把**common_util.lua**加入到lua_package_path中才能使用
+
+---
 
 **判断数组中是否包含某个值**
 
