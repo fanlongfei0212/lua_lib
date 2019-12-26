@@ -56,7 +56,9 @@ lua_package_path "/path/to/lua_lib/lib/json/?.lua;;";
 * location配置
 
 ```conf
-content_by_lua_file json_key_pair.lua;
+location /rsa/json/keyPair {
+    content_by_lua_file json_key_pair.lua;
+}
 ```
 
 * 接口源码
@@ -102,7 +104,9 @@ ngx.exit(ngx.OK)
 * location配置
 
 ```conf
-content_by_lua_file text_key_pair.lua;
+location /rsa/json/keyPair {
+    content_by_lua_file text_key_pair.lua;
+}
 ```
 
 * 接口源码
