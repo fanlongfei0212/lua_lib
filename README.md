@@ -104,7 +104,7 @@ ngx.exit(ngx.OK)
 * location配置
 
 ```conf
-location /rsa/json/keyPair {
+location /rsa/text/keyPair {
     content_by_lua_file text_key_pair.lua;
 }
 ```
