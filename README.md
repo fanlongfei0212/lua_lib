@@ -19,6 +19,8 @@ Table of Contents
     * [request_cookie](#request_cookie)
     * [response_result](#response_result)
     * [common_uitl](#common_util)
+    * [redis_util](#redis_util)
+    * [redis_db_util](#redis_db_util)
 * [Components](#Components)
     * [lua-redis-parser](#lua-redis-parser)
     * [redis2-nginx-module](#redis2-nginx-module)
@@ -1195,6 +1197,400 @@ end
 分离出的v:属性3
 分离出的v:属性1
 分离出的v:属性2
+```
+
+[Back to TOC](#table-of-contents)
+
+redis_util
+----------
+
+### 概要
+
+针对redis中5中数据结构的常用操作，但不支持分库操作（如需要支持分库，则请使用**redis_db_util**），支持以下操作：
+
+| 数据结构 | 支持操作 | 备注 |
+| :------: | :------: | :------: |
+| key-value | set、get、del、mset、mget | 暂无 |
+| hash | hset、hget、hmset、hmget、hdel | 暂无 |
+| list | lpush、lrange、lindex、llen、lrem | 暂无 |
+| set | sadd、smembers、scard、sdiff、sinter、sunion、sismember、srandmember、spop、srem | 暂无 |
+| zset | zadd、zcard、zrange、zrevrange、zrangebyscore、zrem | 暂无 |
+
+nginx的conf配置:
+
+upstream.conf
+
+```conf
+upstream redis_nodes {
+    server localhost:6379;
+    keepalive 1024;
+}
+```
+
+redis.conf
+
+```conf
+
+location /redis/set {
+    internal;
+    set_unescape_uri $key $arg_key;
+    set_unescape_uri $value $arg_value;
+    redis2_query set $key $value;
+    redis2_pass redis_nodes;
+}
+
+location /redis/get {
+    internal;
+    set_unescape_uri $key $arg_key;
+    redis2_query get $key;
+    redis2_pass redis_nodes;
+}
+
+location /redis/single {
+    internal;
+    set_unescape_uri $commands $arg_commands;
+    redis2_raw_query $commands;
+    redis2_pass redis_nodes;
+}
+```
+
+lua_package_path:
+
+```text
+lua_package_path "/path/to/lua_lib/lib/util/?.lua;;";
+```
+
+在OpenResty中对redis操作首先依赖于**redis2-nginx-module**组件，其次此类库依赖**common_util**类库，也需要把**common_util.lua**lua_package_path中才能使用
+
+---
+
+**key-value数据结构**
+
+对应redis操作的函数:
+
+| redis命令 | 对应lua函数 | 参数说明 | 返回值 |
+| :------: | :------: | :------: | :------: |
+| set | redis_util.set(set_command) | 入参:redis命令table，table为对象，对象的属性为key、value | 无 |
+| get | redis_util.get(key) | 入参:key | 查询结果(字符串) |
+| del | redis_util.del(keys) | 入参:redis命令table，table为数组 | 无 |
+| mset | redis_util.mset(mset_command) | 入参:redis命令table，table为数组，数组中为对象，对象的属性为key、value | 无 |
+| mget | redis_util.mget(keys) | redis命令table，table为数组，数组中为key | 查询结果（数组） |
+
+实例:
+
+```lua
+local redis_util = require "redis_util"
+local dkjson = require "dkjson"
+
+local function set()
+    local value = {}
+    value.v1 = "v1"
+    value.v2 = "v2"
+    local set_command = {key = "set_test_key", value = dkjson.encode(value)}
+    redis_util.set(set_command)
+end
+set()
+
+local function get()
+    local result = redis_util.get("set_test_key")
+    ngx.say(result)
+end
+get()
+
+local function del()
+    local del_command = {"set_test_key"}
+    redis_util.del(del_command)
+end
+del()
+
+local function mset()
+    local mset_command = {
+        {key="mset_test_key_1", value="mset_test_value_1"},
+        {key="mset_test_key_2", value="mset_test_value_2"},
+        {key="mset_test_key_3", value="mset_test_value_3"}
+    }
+    redis_util.mset(mset_command)
+end
+mset()
+
+local function mget()
+    local mget_command = {"mset_test_key_1", "mset_test_key_2", "mset_test_key_3"}
+    local result = redis_util.mget(mget_command)
+    for i, v in ipairs(result) do
+        ngx.say(v)
+    end
+end
+mget()
+```
+
+**hash数据结构**
+
+对应redis操作的函数:
+
+| redis命令 | 对应lua函数 | 参数说明 | 返回值 |
+| :------: | :------: | :------: | :------: |
+| hset | redis_util.hset(hset_command) | 入参:redis命令table，table为对象，对象的属性为key、filed、value | 无 |
+| hget | redis_util.hget(hget_command) | 入参:redis命令table，table为对象，对象的属性为key、filed | 查询结果（字符串） |
+| hmset | redis_util.hmset(key, hmset_command) | 入参:key和redis命令table，table为对象，key为hmset中key值，hmset_command为对象数组，对象的属性为filed、value | 无 |
+| hmget | redis_util.hmget(key, fileds) | 入参:key为hmget中key值，fileds为数组 | 查询结果（table） |
+| hdel | redis_util.hdel(key, fileds) | 入参:key为hmset中key值，fileds为数组 | 无 |
+
+实例:
+
+```lua
+local redis_util = require "redis_util"
+
+local function hset()
+    local hset_command = {}
+    hset_command.key = "hset_key"
+    hset_command.filed = "hset_filed"
+    hset_command.value = "hset_value"
+    redis_util.hset(hset_command)
+end
+hset()
+
+local function hget()
+    local hget_command = {}
+    hget_command.key = "hset_key"
+    hget_command.filed = "hset_filed"
+    ngx.say(redis_util.hget(hget_command))
+end
+hget()
+
+local function hmset()
+    local hmset_command = {
+        {filed = "hmset_test_filed_1", value = "hmset_test_value_1"},
+        {filed = "hmset_test_filed_2", value = "hmset_test_value_2"},
+        {filed = "hmset_test_filed_3", value = "hmset_test_value_3"}
+    }
+    redis_util.hmset("hmset_test", hmset_command)
+end
+hmset()
+
+local function hmget()
+    local hmget_command = {"hmset_test_filed_1", "hmset_test_filed_2", "hmset_test_filed_3"}
+    local result = redis_util.hmget("hmset_test", hmget_command)
+    for i, v in ipairs(result) do
+        ngx.say(v)
+    end
+end
+hmget()
+
+local function hdel()
+    local hdel_command = {"hmset_test_filed_1", "hmset_test_filed_2"}
+    redis_util.hdel("hmset_test", hdel_command)
+end
+hdel()
+```
+
+**list数据结构**
+
+对应redis操作的函数:
+
+| redis命令 | 对应lua函数 | 参数说明 | 返回值 |
+| :------: | :------: | :------: | :------: |
+| lpush | redis_util.lpush(key, values) | 入参:key为lpush中key值，values为值数组 | 无 |
+| lrange | redis_util.lrange(key, start, en) | 入参:key为lrange的key，start为开始位置，en为结束位置，start和en只能是数字 | 查询结果（table） |
+| lindex | redis_util.lindex(key, index) | 入参:key为lindex的key，index为索引 | 查询结果（字符串） |
+| llen | redis_util.llen(key) | 入参:key为llen的key | 查询结果（数字） |
+| lrem | redis_util.lrem(key, count, value) | 入参:key为lrem的key，count为删除数量以及方向，value为要删除的值;count > 0 : 从表头开始向表尾搜索，移除与 VALUE 相等的元素，数量为 COUNT;count < 0 : 从表尾开始向表头搜索，移除与 VALUE 相等的元素，数量为 COUNT 的绝对值;count = 0 : 移除表中所有与 VALUE 相等的值 | 无 |
+
+实例:
+
+```lua
+local redis_util = require "redis_util"
+
+local function lpush()
+    local lpush_command = {"lpush_test_value_1", "lpush_test_value_2", "lpush_test_value_3"}
+    redis_util.lpush("lpush_test", lpush_command)
+end
+lpush()
+
+local function lrange()
+    local result = redis_util.lrange("lpush_test", 0, -1)
+    for i, v in ipairs(result) do
+        ngx.say(v)
+    end
+end
+lrange()
+
+local function lindex()
+    ngx.say(redis_util.lindex("lpush_test", 0))
+end
+lindex()
+
+local function llen()
+    ngx.say(redis_util.llen("lpush_test"))
+end
+llen()
+
+local function lrem()
+    redis_util.lrem("lpush_test", 0, "lpush_test_value_1")
+end
+lrem()
+```
+
+**set数据结构**
+
+对应redis操作的函数:
+
+| redis命令 | 对应lua函数 | 参数说明 | 返回值 |
+| :------: | :------: | :------: | :------: |
+| sadd | redis_util.sadd(key, values) | 入参:key为sadd的key，values为table数组 | 无 |
+| smembers | redis_util.smembers(key) | 入参:key为smembers的key | 查询结果（table） |
+| scard | redis_util.scard(key) | 入参:key为scard的key | 查询结果（数字） |
+| sdiff | redis_util.sdiff(key, keys) | 入参:key为要获取差集的set集合的key，keys为对比哪些set集合，keys为数组 | 查询结果（table） |
+| sinter | redis_util.sinter(key, keys) | 入参:key为要获取交集的set集合的key，keys为对比哪些set集合，keys为数组 | 查询结果（table） |
+| sunion | redis_util.sunion(key, keys) | 入参:key为要获取并集的set集合的key，keys为对比哪些set集合，keys为数组 | 查询结果（table） |
+| sismember | redis_util.sismember(key, value) | 入参:key指定的set集合，value为要检测是否存在的元素 | 查询结果（布尔） |
+| srandmember | redis_util.srandmember(key, count) | 入参:key指定的set集合，count为要返回的参数条件（可选），count为数字;如果 count 为正数，且小于集合基数，那么命令返回一个包含 count 个元素的数组，数组中的元素各不相同。如果 count 大于等于集合基数，那么返回整个集合;如果 count 为负数，那么命令返回一个数组，数组中的元素可能会重复出现多次，而数组的长度为 count 的绝对值 | 查询结果（table） |
+| spop | redis_util.spop(key, count) | 入参:key指定的set集合，count为要返回以及删除的参数条件（可选），count为数字但不能是负数并且必须大于0;如果 count 为正数，且小于集合基数，那么命令返回一个包含 count 个元素的数组并且将返回元素删除，数组中的元素各不相同。如果 count 大于等于集合基数，那么返回整个集合，并且将元素删除 | 查询结果（table） |
+| srem | redis_util.srem(key, values) | 入参:key指定的set集合，values为要及删除的值，values为table数组 | 无 |
+
+实例:
+
+```lua
+local redis_util = require "redis_util"
+
+local function sadd()
+    local sadd_command = {"sadd_test_value_1", "sadd_test_value_2", "sadd_test_value_3"}
+    local sadd_command_2 = {"sadd_test_value_1", "sadd_test_value_2", "sadd_test_value_3", "sdiff_1", "sdiff_2"}
+    redis_util.sadd("sadd_test_key", sadd_command)
+    redis_util.sadd("sadd_test_key_2", sadd_command_2)
+end
+sadd()
+
+local function smembers()
+    local result = redis_util.smembers("sadd_test_key")
+    for i, v in ipairs(result) do
+        ngx.say(v)
+    end
+end
+smembers()
+
+local function scard()
+    ngx.say(redis_util.scard("sadd_test_key"))
+end
+scard()
+
+local function sdiff()
+    local target_sdiff_keys = {"sadd_test_key"}
+    local result = redis_util.sdiff("sadd_test_key_2", target_sdiff_keys)
+    for i, v in ipairs(result) do
+        ngx.say(v)
+    end
+end
+sdiff()
+
+local function sinter()
+    local target_sinter_keys = {"sadd_test_key"}
+    local result = redis_util.sinter("sadd_test_key_2", target_sinter_keys)
+    for i, v in ipairs(result) do
+        ngx.say(v)
+    end
+end
+sinter()
+
+local function sunion()
+    local target_sunion_keys = {"sadd_test_key"}
+    local result = redis_util.sunion("sadd_test_key_2", target_sunion_keys)
+    for i, v in ipairs(result) do
+        ngx.say(v)
+    end
+end
+sunion()
+
+local function sismember()
+    ngx.say(redis_util.sismember("sadd_test_key", "sadd_test_value_1"))
+    ngx.say(redis_util.sismember("sadd_test_key", "no_value"))
+end
+sismember()
+
+local function srandmember()
+    local result = redis_util.srandmember("sadd_test_key", 1)
+    for i, v in ipairs(result) do
+        ngx.say(v)
+    end
+end
+srandmember()
+
+local function spop()
+    local result = redis_util.spop("sadd_test_key", 1)
+    for i, v in ipairs(result) do
+        ngx.say(v)
+    end
+end
+spop()
+
+local function srem()
+    local srem_command = {"sadd_test_value_1", "sadd_test_value_2"}
+    redis_util.srem("sadd_test_key_2", srem_command)
+end
+srem()
+```
+
+**zset数据结构**
+
+对应redis操作的函数:
+
+| redis命令 | 对应lua函数 | 参数说明 | 返回值 |
+| :------: | :------: | :------: | :------: |
+| zadd | redis_util.zadd(key, zset_command) | 入参:key指定的zset集合，zset_command为table数组，数组中是对象，对象属性为score、value | 无 |
+| zcard | redis_util.zcard(key) | 入参:key为指定的zset集合 | 查询结果（数字） |
+| zrange | redis_util.zrange(key, start, stop) | 入参:key为指定的zset集合，start为开始下标参数，stop为结束下标参数，start和stop都为数字 | 查询结果（table） |
+| zrevrange | redis_util.zrevrange(key, start, stop) | 入参:key为指定的zset集合，start为开始下标参数，stop为结束下标参数，start和stop都为数字 | 查询结果（table） |
+| zrangebyscore | redis_util.zrangebyscore(key, min, max) | 入参:key为指定的zset集合，min、max为最大以及最小区间，min、max为字符串，但是只能是数字类型的字符串或'('加数字类型的字符串 | 查询结果（table） |
+| zrem | redis_util.zrem(key, values) | 入参:key为指定的zset集合，values为要删除的值，values为数组table，数组中的值为字符串 | 无 |
+
+实例:
+
+```lua
+local redis_util = require "redis_util"
+
+local function zadd()
+    local zadd_command = {
+        {score=001, value="test_zadd_value1"},
+        {score=002, value="test_zadd_value2"},
+        {score=003, value="test_zadd_value3"}
+    }
+    redis_util.zadd("zadd_test_key", zadd_command)
+end
+zadd()
+
+local function zcard()
+    ngx.say(redis_util.zcard("zadd_test_key"))
+end
+zcard()
+
+local function zrange()
+    local result = redis_util.zrange("zadd_test_key", 0, -1)
+    for i, v in ipairs(result) do
+        ngx.say(v)
+    end
+end
+zrange()
+
+local function zrevrange()
+    local result = redis_util.zrevrange("zadd_test_key", 0, -1)
+    for i, v in ipairs(result) do
+        ngx.say(v)
+    end
+end
+zrevrange()
+
+local function zrangebyscore()
+    local result = redis_util.zrangebyscore("zadd_test_key", "0", "2")
+    for i, v in ipairs(result) do
+        ngx.say(v)
+    end
+end
+zrangebyscore()
+
+local function zrem()
+    local zrem_command = {"test_zadd_value1", "test_zadd_value2"}
+    redis_util.zrem("zadd_test_key", zrem_command)
+end
+zrem()
 ```
 
 [Back to TOC](#table-of-contents)
